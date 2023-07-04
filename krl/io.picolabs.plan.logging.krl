@@ -1,12 +1,10 @@
 ruleset io.picolabs.plan.logging {
   meta {
     name "logs"
-    use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.plan.apps alias app
     shares log, settings
   }
   global {
-    event_domain = "org_picostack_logging"
 /*
 * Page: log.html
 */
@@ -229,26 +227,8 @@ function clearModal(){
 /*
 * Rules
 */
-  rule initialize {
-    select when wrangler ruleset_installed where event:attr("rids") >< meta:rid
-    every {
-      wrangler:createChannel(
-        ["logs"],
-        {"allow":[{"domain":"org_picostack_logging","name":"*"}],"deny":[]},
-        {"allow":[{"rid":meta:rid,"name":"*"}],"deny":[]}
-      )
-    }
-    fired {
-      raise org_picostack_logging event "factory_reset"
-    }
-  }
-  rule keepChannelsClean {
-    select when org_picostack_logging factory_reset
-    foreach wrangler:channels(["logs"]).reverse().tail() setting(chan)
-    wrangler:deleteChannel(chan.get("id"))
-  }
   rule initSettings {
-    select when org_picostack_logging factory_reset
+    select when io_picolabs_plan_logging factory_reset
     fired {
       ent:omitQuery := {
         "io.picolabs.pico-engine-ui": "",
@@ -258,13 +238,13 @@ function clearModal(){
     }
   }
   rule applySettings {
-    select when org_picostack_logging new_settings
+    select when io_picolabs_plan_logging new_settings
       count re#^(\d\d+)$#
       setting(new_count)
     send_directive("_redirect",{"url":app:query_url(meta:rid,"log.html")})
     fired {
       ent:count := new_count
-      raise org_picostack_logging event "settings_changed" attributes event:attrs
+      raise io_picolabs_plan_logging event "settings_changed" attributes event:attrs
     }
   }
 }

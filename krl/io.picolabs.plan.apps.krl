@@ -11,7 +11,6 @@ ruleset io.picolabs.plan.apps {
       tags = ["app"].append(wrangler:rulesetMeta(rid).get("name"))
       wrangler:channels(tags).reverse().head().get("id")
     }
-    channel_tags = ["app","applications"]
     evd_for_rid = function(rid){
       rid.replace(re#[.-]#g,"_")
     }
@@ -96,11 +95,11 @@ input.wide90 {
       + html:footer()
     }
   }
-  rule initialize {
+  rule initializeBaseCase {
     select when wrangler ruleset_installed where event:attr("rids") >< meta:rid
     every {
       wrangler:createChannel(
-        channel_tags,
+        ["app","applications"],
         {"allow":[{"domain":"io_picolabs_plan_apps","name":"*"}],"deny":[]},
         {"allow":[{"rid":meta:rid,"name":"*"}],"deny":[]}
       )
@@ -111,7 +110,7 @@ input.wide90 {
   }
   rule keepChannelsClean {
     select when io_picolabs_plan_apps factory_reset
-    foreach wrangler:channels(channel_tags).reverse().tail() setting(chan)
+    foreach wrangler:channels(["app","applications"]).reverse().tail() setting(chan)
     wrangler:deleteChannel(chan.get("id"))
   }
   rule installApp {
@@ -130,10 +129,27 @@ input.wide90 {
       home = rsMeta.get("shares").head() + ".html"
       rsname = rsMeta.get("name")
       spec = {"name":home,"status":"installed","rid":rid,"rsname":rsname}
+      channel_tags = ["app"].append(rsname)
+    }
+    every {
+      wrangler:createChannel(
+        channel_tags,
+        {"allow":[{"domain":"org_picostack_logging","name":"*"}],"deny":[]},
+        {"allow":[{"rid":meta:rid,"name":"*"}],"deny":[]}
+      )
     }
     fired {
       ent:apps{rid} := spec
-      raise byu_hr_manage_apps event "app_installed" attributes event:attrs
+      raise io_picolabs_plan_apps event "app_installed" attributes spec.put("tags",channel_tags)
     }
+  }
+  rule keepAppChannelsClean {
+    select when io_picolabs_plan_apps app_installed
+    foreach wrangler:channels(event:attr("tags")).reverse().tail() setting(chan)
+    wrangler:deleteChannel(chan.get("id"))
+  }
+  rule redirectBack {
+    select when io_picolabs_plan_apps app_installed
+    send_directive("_redirect",{"url":query_url(meta:rid,"apps.html")})
   }
 }
