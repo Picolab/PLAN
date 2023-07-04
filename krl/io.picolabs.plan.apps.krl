@@ -135,7 +135,7 @@ input.wide90 {
       wrangler:createChannel(
         channel_tags,
         {"allow":[{"domain":evd_for_rid(rid),"name":"*"}],"deny":[]},
-        {"allow":[{"rid":meta:rid,"name":"*"}],"deny":[]}
+        {"allow":[{"rid":rid,"name":"*"}],"deny":[]}
       )
     }
     fired {
