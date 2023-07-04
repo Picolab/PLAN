@@ -7,24 +7,91 @@ ruleset io.picolabs.plan.apps {
     provides event_url, query_url, html_page
   }
   global {
+    eci_for_rid = function(rid){
+      tags = ["app"].append(wrangler:rulesetMeta(rid).get("name"))
+      wrangler:channels(tags).reverse().head().get("id")
+    }
     channel_tags = ["app","applications"]
-    event_domain = "io_picolabs_plan_apps"
+    evd_for_rid = function(rid){
+      rid.replace(re#[.-]#g,"_")
+    }
     event_url = function(rid,event_type,event_id){
       eid = event_id || "none"
-      <<#{meta:host}/sky/event/#{meta:eci}/#{eid}/#{event_domain}/#{event_type}>>
+      <<#{meta:host}/sky/event/#{eci_for_rid(rid)}/#{eid}/#{evd_for_rid(rid)}/#{event_type}>>
     }
     query_url = function(rid,query_name){
-      <<#{meta:host}/c/#{meta:eci}/query/#{rid}/#{query_name}>>
+      <<#{meta:host}/c/#{eci_for_rid(rid)}/query/#{rid}/#{query_name}>>
     }
     html_page = function(title,head,body,_headers){
       html:header(title,head,_headers)
       + body
       + html:footer()
     }
+    ruleset = function(rid){
+      ctx:rulesets.filter(function(rs){rs{"rid"}==rid}).head()
+    }
+    display_app = function(app){
+      rsname = app.get("rsname")
+      rid = app.get("rid")
+      url = ruleset(rid).get("url")
+      del_url = event_url(meta:rid,"app_unwanted")
+      link_to_delete = <<<a href="#{del_url}?rid=#{rid}" onclick="return confirm('This cannot be undone, and #{rsname} may be lost if you proceed.')">del</a> >>
+      <<<tr>
+<td>#{app.get("status")}</td>
+<td>#{rid}</td>
+<td><a href="#{query_url(rid,app.get("name"))}">#{app.get("name")}</a></td>
+<td>#{url}</td>
+<td>#{meta:rid == rid => "N/A" | link_to_delete}</td>
+</tr>
+>>
+    }
+    styles = <<<style type="text/css">
+table {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+td, th {
+  border: 1px solid black;
+  padding: 5px;
+}
+input.wide90 {
+  width: 90%;
+}
+</style>
+>>
     apps = function(_headers){
-      html:header("manage applications","",_headers)
+      html:header("manage applications",styles,_headers)
       + <<
 <h1>Manage applications</h1>
+<h2>Applications</h2>
+<table>
+<tr>
+<th>Status</th>
+<th>Ruleset ID</th>
+<th>Home page</th>
+<th>Ruleset URI</th>
+<th>Delete</th>
+</tr>
+#{ent:apps.values().map(display_app).join("")}
+<tr>
+<td colspan="3">Add an app by URL:</td>
+<td colspan="2">
+<form method="POST" action="#{event_url(meta:rid,"new_app")}">
+<input class="wide90" type="text" name="url" placeholder="app URL">
+<button type="submit">Add</button>
+</form>
+</td>
+</tr>
+</table>
+<h2>Technical</h2>
+<p>If your app needs a module, install it here first:</p>
+<form action="#{event_url(meta:rid,"module_needed")}">
+<input class="wide90" name="url" placeholder="module URL">
+<br>
+<input class="wide90" name="config" placeholder="{}">
+<br>
+<button type="submit">Install</button>
+</form>
 >>
       + html:footer()
     }
@@ -34,7 +101,7 @@ ruleset io.picolabs.plan.apps {
     every {
       wrangler:createChannel(
         channel_tags,
-        {"allow":[{"domain":event_domain,"name":"*"}],"deny":[]},
+        {"allow":[{"domain":"io_picolabs_plan_apps","name":"*"}],"deny":[]},
         {"allow":[{"rid":meta:rid,"name":"*"}],"deny":[]}
       )
     }
@@ -46,5 +113,27 @@ ruleset io.picolabs.plan.apps {
     select when io_picolabs_plan_apps factory_reset
     foreach wrangler:channels(channel_tags).reverse().tail() setting(chan)
     wrangler:deleteChannel(chan.get("id"))
+  }
+  rule installApp {
+    select when io_picolabs_plan_apps new_app
+      url re#(.+)# setting(url)
+    fired {
+      raise wrangler event "install_ruleset_request"
+        attributes event:attrs.put({"url":url,"tx":meta:txnId})
+    }
+  }
+  rule makeInstalledRulesetAnApp {
+    select when wrangler ruleset_installed where event:attr("tx") == meta:txnId
+    foreach event:attr("rids") setting(rid)
+    pre {
+      rsMeta = wrangler:rulesetMeta(rid)
+      home = rsMeta.get("shares").head() + ".html"
+      rsname = rsMeta.get("name")
+      spec = {"name":home,"status":"installed","rid":rid,"rsname":rsname}
+    }
+    fired {
+      ent:apps{rid} := spec
+      raise byu_hr_manage_apps event "app_installed" attributes event:attrs
+    }
   }
 }
