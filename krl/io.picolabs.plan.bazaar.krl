@@ -2,7 +2,7 @@ ruleset io.picolabs.plan.bazaar_apps {
   meta {
     name "bazaar apps"
     use module io.picolabs.wrangler alias wrangler
-    use module html.byu alias html
+    use module html.plan alias html
     shares bazaar, krl_code
   }
   global {
