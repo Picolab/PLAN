@@ -38,7 +38,7 @@ Favorite color: <select name="fav_color">
     }
   }
   rule recordFavColor {
-    select when fav_color fav_color_selected
+    select when com_vcpnews_fav_color fav_color_selected
       fav_color re#^(\#[a-f0-9]{6})$# setting(fav_color)
     pre {
       colorname = colors:colormap.filter(function(v){v==fav_color}).keys().head()
@@ -47,14 +47,14 @@ Favorite color: <select name="fav_color">
     fired {
       ent:colorname := colorname
       ent:colorcode := fav_color
-      raise fav_color event "fav_color_recorded" attributes {
+      raise com_vcpnews_fav_color event "fav_color_recorded" attributes {
         "colorcode":fav_color,
         "colorname":colorname,
       }
     }
   }
   rule redirectBack {
-    select when fav_color fav_color_selected
+    select when com_vcpnews_fav_color fav_color_selected
     pre {
       referrer = event:attr("_headers").get("referer") // sic
     }
