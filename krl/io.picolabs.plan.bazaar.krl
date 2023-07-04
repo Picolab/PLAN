@@ -78,9 +78,9 @@ e.x. my.special.guessing-app
 e.x. guess
 [start with a letter; may contain letters, digits, and underscores]
 <br>
-<input name="rsname" placeholder="App meta name" required size="40" pattern="[a-zA-Z][a-zA-Z0-9_]+">
+<input name="rsname" placeholder="App meta name" required size="40" pattern="[a-zA-Z][a-zA-Z0-9_ ]+">
 e.x. guesses
-[start with a letter; may contain letters, digits, and underscores]
+[start with a letter; may contain letters, digits, and spaces]
 <br>
 <input name="event_domain" readonly size="40" title="read-only">
 (computed from RID)
