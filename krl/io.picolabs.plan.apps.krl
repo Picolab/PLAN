@@ -134,7 +134,7 @@ input.wide90 {
     every {
       wrangler:createChannel(
         channel_tags,
-        {"allow":[{"domain":"org_picostack_logging","name":"*"}],"deny":[]},
+        {"allow":[{"domain":evd_for_rid(rid),"name":"*"}],"deny":[]},
         {"allow":[{"rid":meta:rid,"name":"*"}],"deny":[]}
       )
     }
