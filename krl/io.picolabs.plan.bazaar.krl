@@ -234,7 +234,7 @@ function selectAll(e){
     select when bazaar_apps new_app
       rid re#^([a-zA-Z][a-zA-Z0-9._-]+)$#
       home re#^([a-zA-Z][a-zA-Z0-9_]+)$#
-      rsname re#([a-zA-Z][a-zA-Z0-9_]*)#
+      rsname re#([a-zA-Z][a-zA-Z0-9_ ]*)#
       setting(rid,home,rsname)
     pre {
       spec = {
