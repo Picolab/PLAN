@@ -142,7 +142,7 @@ input.wide90 {
     fired {
       ent:apps{rid} := spec
       raise io_picolabs_plan_apps event "app_installed" attributes spec.put("tags",channel_tags)
-      raise event ev_domain+":factory_reset" for rid
+      raise event ev_domain+":factory_reset" for rid.klog("factory_reset")
     }
   }
   rule keepAppChannelsClean {
