@@ -130,17 +130,19 @@ input.wide90 {
       rsname = rsMeta.get("name")
       spec = {"name":home,"status":"installed","rid":rid,"rsname":rsname}
       channel_tags = ["app"].append(rsname)
+      ev_domain = evd_for_rid(rid)
     }
     every {
       wrangler:createChannel(
         channel_tags,
-        {"allow":[{"domain":evd_for_rid(rid),"name":"*"}],"deny":[]},
+        {"allow":[{"domain":ev_domain,"name":"*"}],"deny":[]},
         {"allow":[{"rid":rid,"name":"*"}],"deny":[]}
       )
     }
     fired {
       ent:apps{rid} := spec
       raise io_picolabs_plan_apps event "app_installed" attributes spec.put("tags",channel_tags)
+      raise event ev_domain+":factory_reset" for rid
     }
   }
   rule keepAppChannelsClean {
