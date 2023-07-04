@@ -241,9 +241,13 @@ function clearModal(){
     select when io_picolabs_plan_logging new_settings
       count re#^(\d\d+)$#
       setting(new_count)
+    pre {
+      toDecimal = function(a,d){a*10+d.as("Number")}
+      decimal_count = new_count.split("").reduce(toDecimal,0)
+    }
     send_directive("_redirect",{"url":app:query_url(meta:rid,"log.html")})
     fired {
-      ent:count := new_count
+      ent:count := decimal_count
       raise io_picolabs_plan_logging event "settings_changed" attributes event:attrs
     }
   }
