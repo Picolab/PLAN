@@ -63,6 +63,7 @@ input.wide90 {
       + <<
 <h1>Manage applications</h1>
 <h2>Applications</h2>
+<form method="POST" action="#{event_url(meta:rid,"new_app")}">
 <table>
 <tr>
 <th>RID</th>
@@ -74,13 +75,12 @@ input.wide90 {
 <tr>
 <td colspan="2">Add an app by URL:</td>
 <td colspan="2">
-<form method="POST" action="#{event_url(meta:rid,"new_app")}">
 <input class="wide90" type="text" name="url" placeholder="app URL">
 <button type="submit">Add</button>
-</form>
 </td>
 </tr>
 </table>
+</form>
 <h2>Technical</h2>
 <p>If your app needs a module, install it here first:</p>
 <form action="#{event_url(meta:rid,"module_needed")}">
