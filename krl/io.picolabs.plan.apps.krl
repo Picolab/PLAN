@@ -32,13 +32,13 @@ ruleset io.picolabs.plan.apps {
     display_app = function(app){
       rsname = app.get("rsname")
       rid = app.get("rid")
+      home_url = query_url(rid,app.get("name"))
       url = ruleset(rid).get("url")
       del_url = event_url(meta:rid,"app_unwanted")
       link_to_delete = <<<a href="#{del_url}?rid=#{rid}" onclick="return confirm('This cannot be undone, and #{rsname} may be lost if you proceed.')">del</a> >>
       <<<tr>
 <td>#{rid}</td>
-<td>Manage #{rsname}</td>
-<td><a href="#{query_url(rid,app.get("name"))}">#{app.get("name")}</a></td>
+<td><a href="#{home_url}">Manage #{rsname}</a></td>
 <td>#{url}</td>
 <td>#{meta:rid == rid => "N/A" | link_to_delete}</td>
 </tr>
@@ -65,8 +65,7 @@ input.wide90 {
 <h2>Applications</h2>
 <table>
 <tr>
-<th>Ruleset ID</th>
-<th>In a few words</th>
+<th>RID</th>
 <th>Home page</th>
 <th>Ruleset URI</th>
 <th>Delete</th>
