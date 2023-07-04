@@ -53,7 +53,7 @@ input:invalid {
 >>
           })
       }
-      html:header("manage bazaar apps",styles,null,null,_headers)
+      html:header("manage bazaar apps",styles,_headers)
       + <<
 <h1>Manage bazaar apps</h1>
 <h2>Apps</h2>
@@ -179,7 +179,7 @@ function selectAll(e){
   }
   global {
     #{home} = function(_headers){
-      app:html_page("manage #{rsname}","",
+      app:html_page("manage #{rsname}", "",
 <<
 <h1>Manage #{rsname}</h1>
 \>\>, _headers)
