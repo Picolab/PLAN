@@ -41,7 +41,8 @@ Favorite color: <select name="fav_color">
     select when com_vcpnews_fav_color fav_color_selected
       fav_color re#^(\#[a-f0-9]{6})$# setting(fav_color)
     pre {
-      colorname = colors:colormap.filter(function(v){v==fav_color}).keys().head()
+      fav_color_only = function(v){v==fav_color}
+      colorname = colors:colormap().filter(fav_color_only).keys().head()
         || "unknown"
     }
     fired {

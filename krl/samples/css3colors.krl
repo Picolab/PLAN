@@ -6,7 +6,8 @@ ruleset css3colors {
     provides colormap, options
   }
   global {
-    colormap = {
+    colormap = function(){
+      {
       "aliceblue": "#f0f8ff",
       "antiquewhite": "#faebd7",
       "aquamarine": "#7fffd4",
@@ -137,6 +138,7 @@ ruleset css3colors {
       "wheat": "#f5deb3",
       "whitesmoke": "#f5f5f5",
       "yellowgreen": "#9acd32",
+      }
     }
     between = function(n,min,max){
       i = n.math:int()
@@ -159,14 +161,7 @@ ruleset css3colors {
         <<#{left_margin}<option value="#{v}"#{k==default => " selected" | ""}>#{k}</option>
 >>
       }
-      colormap.map(gen_option).values().join("")
+      colormap().map(gen_option).values().join("")
     }
-/*
-    hex2name = function(hex){
-      hexdigits = hex.match(re#^\##) => hex.substr(1) | hex
-      re = (hexdigits+"$").as("RegExp")
-      colormap.filter(function(v,k){v.match(re)}).head()
-    }
-*/
   }
 }
