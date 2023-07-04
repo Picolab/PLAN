@@ -8,7 +8,8 @@ ruleset io.picolabs.plan.apps {
   }
   global {
     eci_for_rid = function(rid){
-      tags = ["app"].append(wrangler:rulesetMeta(rid).get("name"))
+      rsname = wrangler:rulesetMeta(rid).get("name")
+      tags = ["app"].append(rsname.lc().replace(re#  *#g,"-"))
       wrangler:channels(tags).reverse().head().get("id")
     }
     evd_for_rid = function(rid){
@@ -128,7 +129,7 @@ input.wide90 {
       home = rsMeta.get("shares").head() + ".html"
       rsname = rsMeta.get("name")
       spec = {"name":home,"status":"installed","rid":rid,"rsname":rsname}
-      channel_tags = ["app"].append(rsname)
+      channel_tags = ["app"].append(rsname.lc().replace(re#  *#g,"-"))
       ev_domain = evd_for_rid(rid)
     }
     every {
