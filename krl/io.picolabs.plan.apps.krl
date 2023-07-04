@@ -72,7 +72,7 @@ input.wide90 {
 </tr>
 #{ent:apps.values().map(display_app).join("")}
 <tr>
-<td colspan="3">Add an app by URL:</td>
+<td colspan="2">Add an app by URL:</td>
 <td colspan="2">
 <form method="POST" action="#{event_url(meta:rid,"new_app")}">
 <input class="wide90" type="text" name="url" placeholder="app URL">
