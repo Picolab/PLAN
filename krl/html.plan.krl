@@ -1,4 +1,4 @@
-ruleset html {
+ruleset html.plan {
   meta {
     provides header, footer
   }

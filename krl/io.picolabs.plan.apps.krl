@@ -2,21 +2,22 @@ ruleset io.picolabs.plan.apps {
   meta {
     name "applications"
     use module io.picolabs.wrangler alias wrangler
-    use module html.byu alias html
-    shares main_url, apps
+    use module html.plan alias html
+    shares apps
+    provides event_url, query_url, html_page
   }
   global {
-    channel_tags = ["applications"]
+    channel_tags = ["app","applications"]
     event_domain = "io_picolabs_plan_apps"
-    event_url = function(event_type,event_id){
+    event_url = function(rid,event_type,event_id){
       eid = event_id || "none"
       <<#{meta:host}/sky/event/#{meta:eci}/#{eid}/#{event_domain}/#{event_type}>>
     }
-    query_url = function(query_name){
-      <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/#{query_name}>>
+    query_url = function(rid,query_name){
+      <<#{meta:host}/c/#{meta:eci}/query/#{rid}/#{query_name}>>
     }
-    main_url = function(){
-      query_url("apps.html")
+    html_page = function(title,head,body,_headers){
+      html:header(title,head,body,_headers)
     }
     apps = function(_headers){
       html:header("manage applications","",null,null,_headers)
