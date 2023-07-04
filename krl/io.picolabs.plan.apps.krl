@@ -17,10 +17,12 @@ ruleset io.picolabs.plan.apps {
       <<#{meta:host}/c/#{meta:eci}/query/#{rid}/#{query_name}>>
     }
     html_page = function(title,head,body,_headers){
-      html:header(title,head,body,_headers)
+      html:header(title,head,_headers)
+      + body
+      + html:footer()
     }
     apps = function(_headers){
-      html:header("manage applications","",null,null,_headers)
+      html:header("manage applications","",_headers)
       + <<
 <h1>Manage applications</h1>
 >>
