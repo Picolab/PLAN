@@ -63,7 +63,7 @@ ul#logging-list li input[type="checkbox"]:checked ~ .logging-detail {
 <h1>Manage logs</h1>
 <ul id="logging-list">
 #{episodes.map(log_li).join("")}</ul>
-#(modal_html}
+#{modal_html}
 >>
 ,_headers)
     }
