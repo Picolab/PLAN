@@ -164,4 +164,33 @@ input.wide90 {
              or io_picolabs_plan_apps module_needed
     send_directive("_redirect",{"url":query_url(meta:rid,"apps.html")})
   }
+  rule deleteApp {
+    select when byu_hr_manage_apps app_unwanted
+      rid re#(.+)#
+    fired {
+      // delay one evaluation cycle
+      raise explicit event "app_unwanted" attributes event:attrs
+    }
+  }
+  rule actuallyDeleteApp {
+    select when explicit app_unwanted
+      rid re#(.+)# setting(rid)
+    pre {
+      permanent = meta:rid == rid
+    }
+    if not permanent then noop()
+    fired {
+      raise wrangler event "uninstall_ruleset_request" attributes event:attrs.put("tx",meta:txnId)
+    }
+  }
+  rule updateApps {
+    select when wrangler:ruleset_uninstalled where event:attr("tx") == meta:txnId
+    pre {
+      rid = event:attr("rid")
+    }
+    fired {
+      clear ent:apps{rid}
+      raise byu_hr_manage_apps event "app_deleted" attributes event:attrs
+    }
+  }
 }
