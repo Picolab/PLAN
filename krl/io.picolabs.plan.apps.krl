@@ -91,7 +91,7 @@ input.wide90 {
 <form action="#{event_url(meta:rid,"module_needed")}">
 <input class="wide90" name="url" placeholder="module URL">
 <br>
-<input class="wide90" name="config" placeholder="{}">
+<input class="wide90" name="config" value="{}">
 <br>
 <button type="submit">Install</button>
 </form>
