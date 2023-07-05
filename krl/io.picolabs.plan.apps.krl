@@ -162,10 +162,11 @@ input.wide90 {
   rule redirectBack {
     select when io_picolabs_plan_apps app_installed
              or io_picolabs_plan_apps module_needed
+             or io_picolabs_plan_apps app_deleted
     send_directive("_redirect",{"url":query_url(meta:rid,"apps.html")})
   }
   rule deleteApp {
-    select when byu_hr_manage_apps app_unwanted
+    select when io_picolabs_plan_apps app_unwanted
       rid re#(.+)#
     fired {
       // delay one evaluation cycle
@@ -190,7 +191,7 @@ input.wide90 {
     }
     fired {
       clear ent:apps{rid}
-      raise byu_hr_manage_apps event "app_deleted" attributes event:attrs
+      raise io_picolabs_plan_apps event "app_deleted" attributes event:attrs
     }
   }
 }
