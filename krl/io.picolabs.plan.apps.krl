@@ -104,7 +104,7 @@ input.wide90 {
           where event:attr("rids") >< meta:rid && ent:apps.isnull()
     fired {
       ent:apps := {}
-      raise io_picolabs_plan_apps event "new_app" attributes event:attrs
+      raise io_picolabs_plan_apps event "new_apps_app" attributes event:attrs
     }
   }
   rule installApp {
@@ -117,6 +117,7 @@ input.wide90 {
   }
   rule makeInstalledRulesetAnApp {
     select when wrangler ruleset_installed where event:attr("tx") == meta:txnId
+             or io_picolabs_plan_apps new_apps_app
     foreach event:attr("rids") setting(rid)
     pre {
       rsMeta = wrangler:rulesetMeta(rid)
