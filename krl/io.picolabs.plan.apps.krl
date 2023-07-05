@@ -96,22 +96,12 @@ input.wide90 {
     }
   }
   rule initializeBaseCase {
-    select when wrangler ruleset_installed where event:attr("rids") >< meta:rid
-    every {
-      wrangler:createChannel(
-        ["app","applications"],
-        {"allow":[{"domain":"io_picolabs_plan_apps","name":"*"}],"deny":[]},
-        {"allow":[{"rid":meta:rid,"name":"*"}],"deny":[]}
-      )
-    }
+    select when wrangler ruleset_installed
+          where event:attr("rids") >< meta:rid && ent:apps.isnull()
     fired {
-      raise io_picolabs_plan_apps event "factory_reset"
+      ent:apps := {}
+      raise io_picolabs_plan_apps event "new_app" attributes event:attrs
     }
-  }
-  rule keepChannelsClean {
-    select when io_picolabs_plan_apps factory_reset
-    foreach wrangler:channels(["app","applications"]).reverse().tail() setting(chan)
-    wrangler:deleteChannel(chan.get("id"))
   }
   rule installApp {
     select when io_picolabs_plan_apps new_app
