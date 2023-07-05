@@ -150,8 +150,19 @@ input.wide90 {
     foreach wrangler:channels(event:attr("tags")).reverse().tail() setting(chan)
     wrangler:deleteChannel(chan.get("id"))
   }
+  rule getModuleInstalled {
+    select when io_picolabs_plan_apps module_needed
+      url re#(.+)#
+      config re#(.*)#
+      setting(url,config)
+    fired {
+      raise wrangler event "install_ruleset_request" attributes
+        event:attrs.put("config",config.decode())
+    }
+  }
   rule redirectBack {
     select when io_picolabs_plan_apps app_installed
+             or io_picolabs_plan_apps module_needed
     send_directive("_redirect",{"url":query_url(meta:rid,"apps.html")})
   }
 }
