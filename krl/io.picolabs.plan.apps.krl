@@ -188,7 +188,10 @@ input.wide90 {
     select when wrangler:ruleset_uninstalled where event:attr("tx") == meta:txnId
     pre {
       rid = event:attr("rid")
+      app = ent:apps.get(rid)
+      chan = wrangler:channels(app.get("tags")).reverse().head()
     }
+    wrangler:deleteChannel(chan.get("id"))
     fired {
       clear ent:apps{rid}
       raise io_picolabs_plan_apps event "app_deleted" attributes event:attrs
