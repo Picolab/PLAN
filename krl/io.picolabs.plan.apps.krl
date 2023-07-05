@@ -8,9 +8,7 @@ ruleset io.picolabs.plan.apps {
   }
   global {
     eci_for_rid = function(rid){
-      rsname = ent:apps{[rid,"rsname"]}
-      rsnameForChannelTag = rsname.lc().replace(re#  *#g,"-")
-      tags = ["app"].append(rsnameForChannelTag)
+      tags = ent:apps{[rid,"tags"]}
       wrangler:channels(tags).reverse().head().get("id")
     }
     evd_for_rid = function(rid){
@@ -37,7 +35,7 @@ ruleset io.picolabs.plan.apps {
     display_app = function(app){
       rsname = app.get("rsname")
       rid = app.get("rid")
-      home_url = query_url(rid,app.get("name"))
+      home_url = query_url(rid,app.get("home_url"))
       url = ruleset(rid).get("url")
       del_url = event_url(meta:rid,"app_unwanted")
       link_to_delete = <<<a href="#{del_url}?rid=#{rid}" onclick="return confirm('This cannot be undone, and #{rsname} may be lost if you proceed.')">del</a> >>
@@ -121,11 +119,16 @@ input.wide90 {
     foreach event:attr("rids") setting(rid)
     pre {
       rsMeta = wrangler:rulesetMeta(rid)
-      home = rsMeta.get("shares").head() + ".html"
+      home_url = rsMeta.get("shares").head() + ".html"
       rsname = rsMeta.get("name")
       rsnameForChannelTag = rsname.lc().replace(re#  *#g,"-")
-      spec = {"name":home,"status":"installed","rid":rid,"rsname":rsname}
       channel_tags = ["app"].append(rsnameForChannelTag)
+      spec = {
+        "home_url":home_url,
+        "rid":rid,
+        "rsname":rsname,
+        "tags":channel_tags
+      }
       ev_domain = evd_for_rid(rid)
     }
     every {
@@ -137,7 +140,7 @@ input.wide90 {
     }
     fired {
       ent:apps{rid} := spec
-      raise io_picolabs_plan_apps event "app_installed" attributes spec.put("tags",channel_tags)
+      raise io_picolabs_plan_apps event "app_installed" attributes spec
       raise event ev_domain+":factory_reset" for rid.klog("factory_reset")
     }
   }
