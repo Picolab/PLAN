@@ -141,10 +141,13 @@ ul#logging-list li input[type="checkbox"]:checked ~ .logging-detail {
       };
       entryMap = function(a,e){
         // a.head() is array of entries; a[1] is whether last entry is eats
+        // a[2] is domain:name of the event
         eats = e{"msg"} == "event added to schedule"
-        a[1] && eats
-          => [a.head(),true] // omit an eats
-           | [a.head().append(episode_line(e)),eats]
+        event_dt = eats => e{["event","domain"]} + ":" + e{["event","name"]}
+                         | ""
+        a[1] && eats && a[2]==event_dt
+          => [a.head(),true,event_dt] // omit a duplicate eats
+           | [a.head().append(episode_line(e)),eats,event_dt]
       }
       episodes = ctx:logs()
         .collect(function(e){e.get("txnId")})
@@ -152,7 +155,7 @@ ul#logging-list li input[type="checkbox"]:checked ~ .logging-detail {
         .map(function(k){
           episode = episodes.get(k)
           entries = episode
-            .reduce(entryMap,[[],false]).head()
+            .reduce(entryMap,[[],false,""]).head()
           return {
             "txnId": k,
             "time": episode.head().get("time"),
