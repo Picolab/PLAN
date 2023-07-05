@@ -17,11 +17,14 @@ ruleset io.picolabs.plan.apps {
       rid.replace(re#[.-]#g,"_")
     }
     event_url = function(rid,event_type,event_id){
+      eci = eci_for_rid(rid)
       eid = event_id || "none"
-      <<#{meta:host}/sky/event/#{eci_for_rid(rid)}/#{eid}/#{evd_for_rid(rid)}/#{event_type}>>
+      event_domain = evd_for_rid(rid)
+      <<#{meta:host}/sky/event/#{eci}/#{eid}/#{event_domain}/#{event_type}>>
     }
     query_url = function(rid,query_name){
-      <<#{meta:host}/c/#{eci_for_rid(rid)}/query/#{rid}/#{query_name}>>
+      eci = eci_for_rid(rid)
+      <<#{meta:host}/c/#{eci}/query/#{rid}/#{query_name}>>
     }
     html_page = function(title,head,body,_headers){
       html:header(title,head,_headers)
