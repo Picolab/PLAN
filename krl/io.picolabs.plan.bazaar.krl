@@ -1,8 +1,7 @@
 ruleset io.picolabs.plan.bazaar_apps {
   meta {
     name "bazaar apps"
-    use module io.picolabs.wrangler alias wrangler
-    use module html.plan alias html
+    use module io.picolabs.plan.apps alias app
     shares bazaar, krl_code
   }
   global {
@@ -30,8 +29,8 @@ input:invalid {
 >>
     bazaar = function(_headers){
       base = <<#{meta:host}/sky/cloud/#{meta:eci}/#{meta:rid}/krl_code.txt>>
-      edit = <<#{meta:host}/sky/event/#{meta:eci}/edit/bazaar_apps/app_needs_edit>>
-      repo = repo_pico()
+      edit = app:event_url(meta:rid,"app_needs_editing","edit")
+      repo = null //repo_pico()
       repo_attrs = repo => ""
                          | << style="pointer-events:none;cursor:default">>
       repo_title = repo => ""
@@ -48,13 +47,13 @@ input:invalid {
 <td><code>#{spec.get("event_domain")}</code></td>
 <td><a href="#{base}?rid=#{rid}" onclick="shwk(event);return false">show KRL</a></td>
 <td#{repo_title}><a href="#{edit}?rid=#{rid}"#{repo_attrs}>edit/host KRL</a></td>
-<td><a href="#{meta:host}/sky/event/#{meta:eci}/none/bazaar_apps/app_not_wanted?rid=#{rid}" onclick="return confirm('This cannot be undone, and the app may be lost if you proceed.')">del</a></td>
+<td><a href="#{app:event_url(meta:rid,"app_not_wanted")}?rid=#{rid}" onclick="return confirm('This cannot be undone, and the app may be lost if you proceed.')">del</a></td>
 </tr>
 >>
           })
       }
-      html:header("manage bazaar apps",styles,_headers)
-      + <<
+      app:html_page("manage bazaar apps",styles,
+      <<
 <h1>Manage bazaar apps</h1>
 <h2>Apps</h2>
 <table>
@@ -69,8 +68,8 @@ input:invalid {
 </tr>
 #{li_apps().join("")}</table>
 <h2>New app</h2>
-<form action="#{meta:host}/sky/event/#{meta:eci}/none/bazaar_apps/new_app">
-<input name="rid" placeholder="Ruleset ID" onchange="this.form.event_domain.value=this.value.replace(/[.-]/g,'_')" required size="40" pattern="[a-zA-Z][a-zA-Z0-9._-]+">
+<form action="#{app:event_url(meta:rid,"new_app")}">
+<input name="rid" placeholder="Ruleset ID" required size="40" pattern="[a-zA-Z][a-zA-Z0-9._-]+">
 e.x. my.special.guessing-app
 [start with a letter; may contain letters, digits, underscores, dashes, and periods]
 <br>
@@ -81,9 +80,6 @@ e.x. guess
 <input name="rsname" placeholder="App meta name" required size="40" pattern="[a-zA-Z][a-zA-Z0-9_ ]+">
 e.x. guesses
 [start with a letter; may contain letters, digits, and spaces]
-<br>
-<input name="event_domain" readonly size="40" title="read-only">
-(computed from RID)
 <br>
 <button type="submit">Submit</button>
 </form>
@@ -161,16 +157,11 @@ function selectAll(e){
 }
 </script>
 >>
-      + html:footer()
+,_headers)
     }
-    tags = ["bazaar_apps"]
     krl_code = function(rid){
       rsname = ent:apps{[rid,"rsname"]}
       home = ent:apps{[rid,"name"]}
-      channel_tags = [ent:apps{[rid,"rsname"]}].encode()
-      event_domain = ent:apps{[rid,"event_domain"]}
-      event_url_code = "<<#{meta:host}/sky/event/#{meta:eci}/#{eid}/#{event_domain}/#{event_type}>>"
-      query_url_code = "<<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/#{query_name}>>"
       <<ruleset #{rid} {
   meta {
     name "#{rsname}"
@@ -188,6 +179,7 @@ function selectAll(e){
 }
 >>
     }
+/*
     repo_rid = "com.vcpnews.repo"
     repo_name = function(){
       netid = wrangler:name()
@@ -211,27 +203,10 @@ function selectAll(e){
         {"rid":rid}
       )
     }
-  }
-  rule initialize {
-    select when wrangler ruleset_installed where event:attr("rids") >< meta:rid
-    every {
-      wrangler:createChannel(
-        tags,
-        {"allow":[{"domain":"bazaar_apps","name":"*"}],"deny":[]},
-        {"allow":[{"rid":meta:rid,"name":"*"}],"deny":[]}
-      )
-    }
-    fired {
-      raise bazaar_apps event "factory_reset"
-    }
-  }
-  rule keepChannelsClean {
-    select when bazaar_apps factory_reset
-    foreach wrangler:channels(tags).reverse().tail() setting(chan)
-    wrangler:deleteChannel(chan.get("id"))
+*/
   }
   rule acceptNewApp {
-    select when bazaar_apps new_app
+    select when io_picolabs_plan_bazaar_apps new_app
       rid re#^([a-zA-Z][a-zA-Z0-9._-]+)$#
       home re#^([a-zA-Z][a-zA-Z0-9_]+)$#
       rsname re#([a-zA-Z][a-zA-Z0-9_ ]*)#
@@ -249,22 +224,23 @@ function selectAll(e){
     }
   }
   rule deleteApp {
-    select when bazaar_apps app_not_wanted
+    select when io_picolabs_plan_bazaar_apps app_not_wanted
       rid re#^(.+)$# setting(rid)
     fired {
       clear ent:apps{rid}
     }
   }
   rule redirectBack {
-    select when bazaar_apps new_app
-             or bazaar_apps app_not_wanted
+    select when io_picolabs_plan_bazaar_apps new_app
+             or io_picolabs_plan_bazaar_apps app_not_wanted
     pre {
       referrer = event:attr("_headers").get("referer") // sic
     }
     if referrer then send_directive("_redirect",{"url":referrer})
   }
+/*
   rule sendSourceCode {
-    select when bazaar_apps app_needs_edit
+    select when io_picolabs_plan_bazaar_apps app_needs_edit
       rid re#(.+)#
       setting(rid)
     pre {
@@ -279,7 +255,7 @@ function selectAll(e){
       })
   }
   rule openNewEditor {
-    select when bazaar_apps app_needs_edit
+    select when io_picolabs_plan_bazaar_apps app_needs_edit
       rid re#(.+)#
       setting(rid)
     pre {
@@ -289,4 +265,5 @@ function selectAll(e){
     }
     send_directive("_redirect",{"url":url})
   }
+*/
 }
