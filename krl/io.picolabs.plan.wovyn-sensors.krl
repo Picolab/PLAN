@@ -117,7 +117,7 @@ daysInRecord()
         tts = function(a,tt,i){
           a+(i%2==0 => tt.makeMT().ts_format() + delims | tt + LF)
         }
-        list.reduce(tts,"")
+        list.length() => list.reduce(tts,"") | ""
       }
       hdr = ["Timestamp"].append(ent:mapping.values().reverse()).join(delim)
       lines = ent:mapping.keys().reverse().map(function(k,i){
