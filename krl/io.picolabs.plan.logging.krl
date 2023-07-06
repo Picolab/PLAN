@@ -10,7 +10,8 @@ ruleset io.picolabs.plan.logging {
 */
     styles = <<<style type="text/css">
 ul#logging-list {
-  padding: 0px;
+  list-style: none;
+  padding-inline-start: unset;
 }
 ul#logging-list li {
   white-space: nowrap;
