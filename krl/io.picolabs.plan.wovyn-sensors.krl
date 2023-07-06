@@ -7,12 +7,6 @@ ruleset io.picolabs.plan.wovyn-sensors {
     provides daysInRecord, export_csv
   }
   global {
-    mapping = {
-      "Wovyn_2BD707": "Shed",
-      "Wovyn_162EB3": "Attic",
-      "Wovyn_163ECD": "Kitchen",
-      "Wovyn_746ABF": "Porch",
-    }
     daysInRecord = function(){ // finds all dates in the data
       firstHour = function(v,i){
         i%2==0
@@ -52,7 +46,7 @@ ruleset io.picolabs.plan.wovyn-sensors {
     wovyn_sensor = function(_headers){
       one_sensor = function(v,k){
         vlen = v.length()
-        <<<h2 title="#{k}">#{mapping{k}}</h2>
+        <<<h2 title="#{k}">#{ent:mapping{k}}</h2>
 <table>
 <tr>
 <th>Timestamp</th>
@@ -106,7 +100,7 @@ daysInRecord()
       app:html_page("sensor "+name,"",
       <<
 <h1>sensor #{name}</h1>
-<h2>#{mapping{name}}</h2>
+<h2>#{ent:mapping{name}}</h2>
 <table>
 <tr>
 <th>Timestamp</th>
@@ -125,8 +119,8 @@ daysInRecord()
         }
         list.reduce(tts,"")
       }
-      hdr = ["Timestamp"].append(mapping.values().reverse()).join(delim)
-      lines = mapping.keys().reverse().map(function(k,i){
+      hdr = ["Timestamp"].append(ent:mapping.values().reverse()).join(delim)
+      lines = ent:mapping.keys().reverse().map(function(k,i){
         delims = 0.range(i).map(function(x){delim}).join("")
         ent:record{k}.one_device(delims)
       }).join("").split(LF).sort().join(LF)
@@ -148,6 +142,12 @@ daysInRecord()
       where ent:record.isnull()
     fired {
       ent:record := {}
+      ent:mapping := {
+        "Wovyn_2BD707": "Shed",
+        "Wovyn_162EB3": "Attic",
+        "Wovyn_163ECD": "Kitchen",
+        "Wovyn_746ABF": "Porch",
+      }
     }
   }
   rule acceptHeartbeat {
@@ -155,6 +155,7 @@ daysInRecord()
       eventDomain re#^wovyn.emitter$#
     pre {
       device = event:attrs{["property","name"]}
+      local_name = ent:mapping{device}
       temps = event:attrs{["genericThing","data","temperature"]}
       tempF = temps.head(){"temperatureF"}
       time = time:now()
@@ -163,7 +164,7 @@ daysInRecord()
     fired {
       ent:record{device} := record
       raise io_picolabs_plan_wovyn_sensors event "temp_recorded"
-        attributes {"name":mapping{device},"time":time.makeMT(),"temp":tempF}
+        attributes {"name":local_name,"time":time.makeMT(),"temp":tempF}
     }
   }
   rule pruneList {
@@ -181,7 +182,7 @@ daysInRecord()
   rule pruneAllLists {
     select when io_picolabs_plan_wovyn_sensors prune_all_needed
       cutoff re#^(202\d-\d\d-\d\dT0\d)# setting(cutoff)
-    foreach mapping.keys() setting(device)
+    foreach ent:mapping.keys() setting(device)
     pre {
       new_list = ent:record{device}.pruned_list(cutoff)
     }
