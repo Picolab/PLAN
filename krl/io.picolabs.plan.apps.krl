@@ -4,7 +4,7 @@ ruleset io.picolabs.plan.apps {
     use module io.picolabs.wrangler alias wrangler
     use module html.plan alias html
     shares apps
-    provides event_url, query_url, html_page, app_list
+    provides event_url, query_url, html_page, app_list, app_anchor
   }
   global {
     eci_for_rid = function(rid){
@@ -23,6 +23,10 @@ ruleset io.picolabs.plan.apps {
     query_url = function(rid,query_name){
       eci = eci_for_rid(rid)
       <<#{meta:host}/c/#{eci}/query/#{rid}/#{query_name}>>
+    }
+    app_anchor = function(rid){
+      home_page = ent:apps{[rid,"home_url"]}
+      <<<a href="#{query_url(rid,home_page)}">#{home_page}</a\>>>
     }
     html_page = function(title,head,body,_headers){
       html:header(title,head,_headers)
