@@ -1,6 +1,6 @@
 ruleset io.picolabs.plan.wovyn-sensors {
   meta {
-    name "wovyn_sensors"
+    name "Wovyn sensors"
     use module io.picolabs.plan.apps alias app
     shares wovyn_sensor, history, export_tsv, export_csv
 , export_raw
@@ -58,9 +58,9 @@ ruleset io.picolabs.plan.wovyn-sensors {
 (#{vlen/2-1} more)
 >>
       }
-      app:html_page("manage wovyn_sensors","",
+      app:html_page("manage Wovyn sensors","",
       <<
-<h1>Manage wovyn_sensors</h1>
+<h1>Manage Wovyn sensors</h1>
 #{ent:record.map(one_sensor).values().join("")}
 <h2>Operations</h2>
 <h3>Export records</h3>
