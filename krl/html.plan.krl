@@ -49,7 +49,7 @@ body {
   <body>
     <div id="plan-bar">
       <img class="logo" src="#{pico_logo}" alt="pico logo">
-      <a href="index.html">
+      <a href="plan.html">
       <span class="plan">Pico Labs Affiliate Network</span>
       </a>
       <img class="user-circle" src="#{user_circle_svg}">
