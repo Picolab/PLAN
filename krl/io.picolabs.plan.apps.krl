@@ -4,7 +4,7 @@ ruleset io.picolabs.plan.apps {
     use module io.picolabs.wrangler alias wrangler
     use module html.plan alias html
     shares apps
-    provides event_url, query_url, html_page
+    provides event_url, query_url, html_page, app_list
   }
   global {
     eci_for_rid = function(rid){
@@ -28,6 +28,9 @@ ruleset io.picolabs.plan.apps {
       html:header(title,head,_headers)
       + body
       + html:footer()
+    }
+    app_list = function(){
+      ent:apps.keys()
     }
     ruleset = function(rid){
       ctx:rulesets.filter(function(rs){rs{"rid"}==rid}).head()
