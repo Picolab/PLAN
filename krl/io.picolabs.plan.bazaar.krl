@@ -1,4 +1,4 @@
-ruleset io.picolabs.plan.bazaar_apps {
+ruleset io.picolabs.plan.bazaar {
   meta {
     name "bazaar apps"
     use module io.picolabs.wrangler alias wrangler
@@ -205,7 +205,7 @@ function selectAll(e){
     }
   }
   rule acceptNewApp {
-    select when io_picolabs_plan_bazaar_apps new_app
+    select when io_picolabs_plan_bazaar new_app
       rid re#^([a-zA-Z][a-zA-Z0-9._-]+)$#
       home re#^([a-zA-Z][a-zA-Z0-9_]+)$#
       rsname re#([a-zA-Z][a-zA-Z0-9_ ]*)#
@@ -223,22 +223,22 @@ function selectAll(e){
     }
   }
   rule deleteApp {
-    select when io_picolabs_plan_bazaar_apps app_not_wanted
+    select when io_picolabs_plan_bazaar app_not_wanted
       rid re#^(.+)$# setting(rid)
     fired {
       clear ent:apps{rid}
     }
   }
   rule redirectBack {
-    select when io_picolabs_plan_bazaar_apps new_app
-             or io_picolabs_plan_bazaar_apps app_not_wanted
+    select when io_picolabs_plan_bazaar new_app
+             or io_picolabs_plan_bazaar app_not_wanted
     pre {
       referrer = event:attr("_headers").get("referer") // sic
     }
     if referrer then send_directive("_redirect",{"url":referrer})
   }
   rule sendSourceCode {
-    select when io_picolabs_plan_bazaar_apps app_needs_edit
+    select when io_picolabs_plan_bazaar app_needs_edit
       rid re#(.+)#
       setting(rid)
     pre {
@@ -253,7 +253,7 @@ function selectAll(e){
       })
   }
   rule openNewEditor {
-    select when io_picolabs_plan_bazaar_apps app_needs_edit
+    select when io_picolabs_plan_bazaar app_needs_edit
       rid re#(.+)#
       setting(rid)
     pre {
