@@ -1,6 +1,7 @@
 ruleset io.picolabs.plan.bazaar_apps {
   meta {
     name "bazaar apps"
+    use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.plan.apps alias app
     shares bazaar, krl_code
   }
@@ -29,8 +30,8 @@ input:invalid {
 >>
     bazaar = function(_headers){
       base = <<#{meta:host}/sky/cloud/#{meta:eci}/#{meta:rid}/krl_code.txt>>
-      edit = app:event_url(meta:rid,"app_needs_editing","edit")
-      repo = null //repo_pico()
+      edit = app:event_url(meta:rid,"app_needs_edit","edit")
+      repo = repo_pico()
       repo_attrs = repo => ""
                          | << style="pointer-events:none;cursor:default">>
       repo_title = repo => ""
@@ -179,7 +180,6 @@ function selectAll(e){
 }
 >>
     }
-/*
     repo_rid = "com.vcpnews.repo"
     repo_name = function(){
       netid = wrangler:name()
@@ -203,7 +203,6 @@ function selectAll(e){
         {"rid":rid}
       )
     }
-*/
   }
   rule acceptNewApp {
     select when io_picolabs_plan_bazaar_apps new_app
@@ -238,7 +237,6 @@ function selectAll(e){
     }
     if referrer then send_directive("_redirect",{"url":referrer})
   }
-/*
   rule sendSourceCode {
     select when io_picolabs_plan_bazaar_apps app_needs_edit
       rid re#(.+)#
@@ -259,11 +257,10 @@ function selectAll(e){
       rid re#(.+)#
       setting(rid)
     pre {
-      rs_rid = "com.vcpnews.ruleset"
-      rs_eci = wrangler:channels(["introspections"]).head(){"id"}
+      rs_rid = "io.picolabs.plan.ruleset"
+      rs_eci = wrangler:channels(["app","introspections"]).head(){"id"}
       url = <<#{meta:host}/c/#{rs_eci}/query/#{rs_rid}/codeEditor.html?rid=#{rid}>>
     }
     send_directive("_redirect",{"url":url})
   }
-*/
 }
