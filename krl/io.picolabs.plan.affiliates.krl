@@ -9,6 +9,17 @@ ruleset io.picolabs.plan.affiliates {
       ent:lastResponse
     }
   }
+  rule validateEmailSubmission {
+    select when io_picolabs_plan_affiliates email_address_submitted
+      email_address re#^([\w\d.%+-]+@[\w\d.-]+\.[a-zA-Z]+)#
+      setting(email_address)
+    pre {
+      referrer = event:attr{["_headers","referer"]} //sic
+.klog("referrer")
+      expected = referrer.match(re#^https://plan.picolabs.io#i)
+.klog("expected")
+    }
+  }
   rule returningAffiliate {
     select when io_picolabs_plan_affiliates email_address_submitted
       email_address re#^([\w\d.%+-]+@[\w\d.-]+\.[a-zA-Z]+)#
