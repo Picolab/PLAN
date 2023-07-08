@@ -3,7 +3,7 @@ ruleset io.picolabs.plan.apps {
     name "applications"
     use module io.picolabs.wrangler alias wrangler
     use module html.plan alias html
-    shares apps
+    shares apps, app_anchor
     provides event_url, query_url, html_page, app_list, app_anchor
   }
   global {
