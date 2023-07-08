@@ -14,9 +14,9 @@ ruleset io.picolabs.plan.affiliates {
       email_address re#^([\w\d.%+-]+@[\w\d.-]+\.[a-zA-Z]+)#
       setting(email_address)
     pre {
-      referrer = event:attr{["_headers","referer"]} //sic
+      referrer = event:attrs{["_headers","referer"]} //sic
 .klog("referrer")
-      expected = referrer.match(re#^https://plan.picolabs.io#i)
+      expected = referrer.match(re#^https://plan.picolabs.io/#i)
 .klog("expected")
     }
   }
