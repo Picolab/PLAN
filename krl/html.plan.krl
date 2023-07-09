@@ -1,11 +1,13 @@
 ruleset html.plan {
   meta {
+    use module io.picolabs.wrangler alias wrangler
     provides header, footer
   }
   global {
     pico_logo = "https://raw.githubusercontent.com/Picolab/PLAN/main/docs/pico-logo-transparent-48x48.png"
     user_circle_svg = "https://raw.githubusercontent.com/Picolab/fully-sharded-database/main/images/user-circle-o-white.svg"
     header = function(title,scripts) {
+      pico_name = wrangler:name()
       <<<!DOCTYPE HTML>
 <html>
   <head>
@@ -43,6 +45,11 @@ body {
 #plan-bar a {
   text-decoration: none;
 }
+#plan-bar .username {
+  float: right;
+  color: white;
+  vertical-align: middle;
+}
 </style>
 #{scripts.defaultsTo("")}
   </head>
@@ -53,6 +60,7 @@ body {
       <span class="plan">Pico Labs Affiliate Network</span>
       </a>
       <img class="user-circle" src="#{user_circle_svg}">
+      <span class="username">#{pico_name}</span>
     </div>
     <div style="background-color:white;color:black;height:100%;border-radius:5px">
       <div id="section" style="height:100vh;margin-left:10px">
