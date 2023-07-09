@@ -49,6 +49,7 @@ body {
   float: right;
   color: white;
   vertical-align: middle;
+  margin: 15px 10px 0 0;
 }
 </style>
 #{scripts.defaultsTo("")}
