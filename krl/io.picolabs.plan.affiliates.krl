@@ -80,6 +80,7 @@ ruleset io.picolabs.plan.affiliates {
     }
     if email_address then noop()
     fired {
+      clear ent:correlation{cid}
       raise wrangler event "new_child_request" attributes
         event:attrs.put("name",email_address)
     }
@@ -100,7 +101,7 @@ ruleset io.picolabs.plan.affiliates {
       })
     }
     fired {
-      raise ruleset event "repo_installed" // terminal event
+      raise ruleset event "rulesets_installed_for_affiliate" // terminal event
     }
   }
 }
