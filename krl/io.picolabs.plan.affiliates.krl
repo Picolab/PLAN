@@ -13,7 +13,7 @@ ruleset io.picolabs.plan.affiliates {
       ent:correlation.encode() || {}
     }
     verifPage = function(cid,_headers){
-      resend_url = <<#{meta:host}/sky/event/#{meta:eci}/none/io_picolabs_plan_affiliates/need_another_verification_email_message>>
+      resend_url = <<#{meta:host}/sky/event/#{meta:eci}/none/io_picolabs_plan_affiliates/need_verification_email_message>>
       html:header("email verification", "", _headers)
       + <<
 <h1>Verification email message sent</h1>
@@ -96,14 +96,29 @@ Didn't receive it?
     pre {
       email_address = event:attrs.get("email_address")
       cid = random:uuid()
+    }
+    fired {
+      ent:correlation{cid} := email_address
+      raise io_picolabs_plan_affiliates event "need_verification_email_message"
+        attributes {"cid":cid}
+    }
+  }
+  rule sendEmailVerificationMessage {
+    select when io_picolabs_plan_affiliates need_verification_email_message
+    pre {
+      cid = event:attrs.get("cid")
+      email_address = ent:correlation.get(cid)
       eci = meta:eci // TODO use a one-time ECI
       url = <<#{meta:host}/sky/event/#{eci}/none/io_picolabs_plan_affiliates/email_address_verified?cid=#{cid}>>
       subject = "verify your email address"
       message = "Click here to verify your email address: " + url
+      verif_url = <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/verifPage.html?cid=#{cid}>>
     }
-    email:send_text(email_address,subject,message) setting(res)
+    every {
+      email:send_text(email_address,subject,message) setting(res)
+      send_directive("_redirect",{"url":verif_url})
+    }
     fired {
-      ent:correlation{cid} := email_address
       ent:lastResponse := res
     }
   }
