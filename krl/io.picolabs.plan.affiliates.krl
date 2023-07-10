@@ -2,11 +2,14 @@ ruleset io.picolabs.plan.affiliates {
   meta {
     use module io.picolabs.wrangler alias wrangler
     use module com.mailjet.sdk alias email
-    shares lastResponse
+    shares lastResponse, correlations
   }
   global {
     lastResponse = function(){
       ent:lastResponse
+    }
+    correlations = function(){
+      ent:correlation.encode()
     }
   }
   rule validateEmailSubmission {
@@ -77,6 +80,7 @@ ruleset io.picolabs.plan.affiliates {
       cid re#(.+)# setting(cid)
     pre {
       email_address = ent:correlation{cid}
+.klog("email_address")
     }
     if email_address then noop()
     fired {
