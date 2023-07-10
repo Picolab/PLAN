@@ -2,7 +2,8 @@ ruleset io.picolabs.plan.affiliates {
   meta {
     use module io.picolabs.wrangler alias wrangler
     use module com.mailjet.sdk alias email
-    shares lastResponse, correlations
+    use module html.plan alias html
+    shares lastResponse, correlations, verifPage
   }
   global {
     lastResponse = function(){
@@ -10,6 +11,37 @@ ruleset io.picolabs.plan.affiliates {
     }
     correlations = function(){
       ent:correlation.encode()
+    }
+    verifPage = function(cid,_headers){
+      resend_url = <<#{meta:host}/sky/event/#{meta:eci}/none/io_picolabs_plan_affiliates/need_another_verification_email_message>>
+      html:header("email verification", "", _headers)
+      + <<
+<h1>Verification email message sent</h1>
+<p>
+We have sent you an email message from:
+<span class="from-stuff" style='font-family:"Google Sans", Roboto, RobotoDraft, Helvetica, Arial, sans-serif'>
+<span class="from-name" style="font-size:0.875rem;font-weight:bold;color:rgb(31,31,31)">Pico Labs</span>
+<span class="from-email" style="font-size:0.75rem;color:rgb(94,94,94)">picolabsaffiliatenetwork@gmail.com</span>
+<span class="from-via" style="font-size:0.75rem;color:rgb(94,94,94)">
+<a target="_blank" href="https://support.google.com/mail/answer/1311182?hl=en"
+ style="color: rgb(34,34,34);">via</a>
+bnc3.mailjet.com</span>
+</span>
+</p>
+<p>
+Please click on the link it contains,
+in order to verify that you control the email address.
+</p>
+<p>
+Didn't receive it?
+</p>
+<ul>
+<li>Wait. Sometimes it takes a couple of minutes to arrive.</li>
+<li>Check your spam folder.</li>
+<li>Have us <a href="#{resend_url}?cid=#{cid}">send it again</a>.</li>
+</ul>
+>>
+      + html:footer()
     }
   }
   rule validateEmailSubmission {
