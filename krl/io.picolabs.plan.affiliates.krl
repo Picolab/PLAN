@@ -10,7 +10,7 @@ ruleset io.picolabs.plan.affiliates {
       ent:lastResponse
     }
     correlations = function(){
-      ent:correlation.encode()
+      ent:correlation.encode() || {}
     }
     verifPage = function(cid,_headers){
       resend_url = <<#{meta:host}/sky/event/#{meta:eci}/none/io_picolabs_plan_affiliates/need_another_verification_email_message>>
