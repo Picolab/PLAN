@@ -6,7 +6,7 @@ ruleset io.picolabs.plan.ruleset {
     shares rulesets, ruleset, repo_krl, repo_uiECI, krl, codeEditor
   }
   global {
-    pf = re#^file:///usr/local/lib/node_modules/#
+    pf = re#^file:///.*/lib/node_modules/#
     pu = "https://raw.githubusercontent.com/Picolab/pico-engine/master/packages/"
     by = function(key){
       function(a,b){a{key}.encode() cmp b{key}.encode()}
