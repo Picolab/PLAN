@@ -3,7 +3,7 @@ ruleset io.picolabs.plan.affiliates {
     use module io.picolabs.wrangler alias wrangler
     use module com.mailjet.sdk alias email
     use module html.plan alias html
-    shares lastResponse, correlations, verifPage
+    shares lastResponse, correlations, verifPage, expiredCID
   }
   global {
     lastResponse = function(){
@@ -40,6 +40,18 @@ Didn't receive it?
 <li>Check your spam folder.</li>
 <li>Have us <a href="#{resend_url}?cid=#{cid}">send it again</a>.</li>
 </ul>
+>>
+      + html:footer()
+    }
+    expiredCID = function(_headers){
+      html:header("verification expired", "", _headers)
+      + <<
+<h1>Verification email message expired</h1>
+<p>
+Please return to
+<a href="https://PLAN.picolabs.io/">main page</a>
+and submit your email address again.
+</p>
 >>
       + html:footer()
     }
@@ -114,13 +126,22 @@ Didn't receive it?
       message = "Click here to verify your email address: " + url
       verif_url = <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/verifPage.html?cid=#{cid}>>
     }
-    every {
+    if email_address then every {
       email:send_text(email_address,subject,message) setting(res)
       send_directive("_redirect",{"url":verif_url})
     }
     fired {
       ent:lastResponse := res
+    } else {
+      raise io_picolabs_plan_affiliates event "expired_cid"
     }
+  }
+  rule displayExpiredPage {
+    select when io_picolabs_plan_affiliates expired_cid
+    pre {
+      expired_url = <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/expiredCID.html>>
+    }
+    send_directive("_redirect",{"url":expired_url})
   }
   rule handleEmailVerification {
     select when io_picolabs_plan_affiliates email_address_verified
