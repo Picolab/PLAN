@@ -155,6 +155,8 @@ and submit your email address again.
       clear ent:correlation{cid}
       raise wrangler event "new_child_request" attributes
         event:attrs.put("name",email_address)
+    } else {
+      raise io_picolabs_plan_affiliates event "expired_cid"
     }
   }
   rule reactToChildCreation {
