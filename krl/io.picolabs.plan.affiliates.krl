@@ -50,7 +50,7 @@ Didn't receive it?
       + <<
 <h1>Verification email message expired</h1>
 <p>
-Please return to
+Please return to the
 <a href="https://PLAN.picolabs.io/">main page</a>
 and submit your email address again.
 </p>
@@ -71,7 +71,9 @@ Didn't receive it?
 <ul>
 <li>Wait. Sometimes it takes a couple of minutes to arrive.</li>
 <li>Check your spam folder.</li>
-<li>Have us <a href="#TODO">send it again</a>.</li>
+<li>Please return to the
+<a href="https://PLAN.picolabs.io/">main page</a>
+and submit your email address again.</li>
 </ul>
 >>
       + html:footer()
