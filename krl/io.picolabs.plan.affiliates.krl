@@ -3,7 +3,7 @@ ruleset io.picolabs.plan.affiliates {
     use module io.picolabs.wrangler alias wrangler
     use module com.mailjet.sdk alias email
     use module html.plan alias html
-    shares lastResponse, correlations, verifPage, expiredCID
+    shares lastResponse, correlations, verifPage, expiredCID, sentPage
   }
   global {
     lastResponse = function(){
@@ -12,11 +12,7 @@ ruleset io.picolabs.plan.affiliates {
     correlations = function(){
       ent:correlation.encode() || {}
     }
-    verifPage = function(cid,_headers){
-      resend_url = <<#{meta:host}/sky/event/#{meta:eci}/none/io_picolabs_plan_affiliates/need_verification_email_message>>
-      html:header("email verification", "", _headers)
-      + <<
-<h1>Verification email message sent</h1>
+    sent_paragraph = <<
 <p>
 We have sent you an email message from:
 <span class="from-stuff" style='font-family:"Google Sans", Roboto, RobotoDraft, Helvetica, Arial, sans-serif'>
@@ -28,7 +24,13 @@ We have sent you an email message from:
 bnc3.mailjet.com</span>
 </span>
 </p>
-<p>
+>>
+    verifPage = function(cid,_headers){
+      resend_url = <<#{meta:host}/sky/event/#{meta:eci}/none/io_picolabs_plan_affiliates/need_verification_email_message>>
+      html:header("email verification", "", _headers)
+      + <<
+<h1>Verification email message sent</h1>
+#{sent_paragraph}<p>
 Please click on the link it contains,
 in order to verify that you control the email address.
 </p>
@@ -52,6 +54,25 @@ Please return to
 <a href="https://PLAN.picolabs.io/">main page</a>
 and submit your email address again.
 </p>
+>>
+      + html:footer()
+    }
+    sentPage = function(_headers){
+      html:header("link sent", "", _headers)
+      + <<
+<h1>Link to your pico</h1>
+#{sent_paragraph}<p>
+The link it contains will send you directly to your pico,
+on its Manage applications page.
+</p>
+<p>
+Didn't receive it?
+</p>
+<ul>
+<li>Wait. Sometimes it takes a couple of minutes to arrive.</li>
+<li>Check your spam folder.</li>
+<li>Have us <a href="#TODO">send it again</a>.</li>
+</ul>
 >>
       + html:footer()
     }
@@ -96,9 +117,12 @@ and submit your email address again.
       url = hasRID => wrangler:picoQuery(
         child_eci,appsRID,"app_anchor",{"rid":appsRID}) | null
       is_here = "Your pico is here: " + url
+      sent_url = <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/sentPage.html>>
     }
-    if url then
+    if url then every {
       email:send_text(email_address,"your pico",is_here) setting(res)
+      send_directive("_redirect",{"url":sent_url})
+    }
     fired {
       ent:lastResponse := res
     } 
