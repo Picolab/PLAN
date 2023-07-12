@@ -6,7 +6,10 @@ ruleset html.plan {
   global {
     pico_logo = "https://raw.githubusercontent.com/Picolab/PLAN/main/docs/pico-logo-transparent-48x48.png"
     user_circle_svg = "https://raw.githubusercontent.com/Picolab/fully-sharded-database/main/images/user-circle-o-white.svg"
-    header = function(title,scripts) {
+    header = function(title,scripts,_headers) {
+      the_cookies = cookies(_headers)
+      sanity = ent:client_secret == the_cookies.get("sid")
+      to_log = sanity.klog("sanity")
       pico_name = wrangler:name()
       <<<!DOCTYPE HTML>
 <html>
@@ -74,5 +77,53 @@ body {
 </html>
 >>
     }
+    cookies = function(_headers) {
+      arg = event:attr("_headers") || _headers
+      arg{"cookie"}.isnull() => {} |
+      arg{"cookie"}
+        .split("; ")
+        .map(function(v){v.split("=")})
+        .collect(function(v){v.head()})
+        .map(function(v){v.head()[1]})
+    }
+    tags = ["client","secret"]
+  }
+  rule initialize {
+    select when wrangler ruleset_installed where event:attr("rids") >< meta:rid
+    every {
+      wrangler:createChannel(
+        tags,
+        {"allow":[{"domain":"client","name":"*"}],"deny":[]},
+        {"allow":[],"deny":[{"rid":"*","name":"*"}]}
+      )
+    }
+    fired {
+      raise html_plan event "channel_created"
+    }
+  }
+  rule keepChannelsClean {
+    select when html_plan channel_created
+    foreach wrangler:channels(tags).reverse().tail() setting(chan)
+    wrangler:deleteChannel(chan{"id"})
+  }
+  rule rotateClientSecret {
+    select when client secret_expired
+    pre {
+      sid = random:uuid()
+    }
+    send_directive("_cookie",{"cookie":<<sid=#{sid}; Path=/>>})
+    fired {
+      ent:client_secret := sid
+    }
+  }
+  rule redirectHome {
+    select when client secret_expired
+    pre {
+      tags = ["app","applications"]
+      eci = wrangler:channels(tags).reverse().head().get("id")
+      rid = "io.picolabs.plan.apps"
+      home_url = <<#{meta:host}/c/#{eci}/query/#{rid}/apps.html>>
+    }
+    if eci then send_directive("_redirect",{"url":home_url})
   }
 }
