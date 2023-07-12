@@ -1,14 +1,15 @@
 ruleset html.plan {
   meta {
     use module io.picolabs.wrangler alias wrangler
-    provides header, footer
+    provides header, footer, cookies
   }
   global {
     pico_logo = "https://raw.githubusercontent.com/Picolab/PLAN/main/docs/pico-logo-transparent-48x48.png"
     user_circle_svg = "https://raw.githubusercontent.com/Picolab/fully-sharded-database/main/images/user-circle-o-white.svg"
     header = function(title,scripts,_headers) {
       the_cookies = cookies(_headers)
-      the_name = wrangler:channels(tags).reverse().head().get("id")
+      self_tags = ["self","system"]
+      the_name = wrangler:channels(self_tags).reverse().head().get("id")
       the_sid = the_name => the_cookies.get(the_name) | null
       sanity = the_sid.isnull() || ent:client_secret == the_sid
       sanity_mark = sanity => "" | << style="color:red">>
@@ -112,7 +113,8 @@ body {
     select when client secret_expired
     pre {
       sid = random:uuid()
-      the_name = wrangler:channels(tags).reverse().head().get("id")
+      self_tags = ["self","system"]
+      the_name = wrangler:channels(self_tags).reverse().head().get("id")
     }
     send_directive("_cookie",{"cookie":<<#{the_name}=#{sid}; Path=/>>})
     fired {
