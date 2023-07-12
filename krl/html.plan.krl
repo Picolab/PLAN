@@ -69,7 +69,7 @@ body {
       <span class="username"#{sanity_mark}>#{pico_name}</span>
     </div>
     <div style="background-color:white;color:black;height:100%;border-radius:5px">
-      <div id="section" style="height:100vh;margin-left:10px">
+      <div id="section" style="min-height:100vh;margin-left:10px">
 >>
     }
     footer = function() {
