@@ -3,7 +3,7 @@ ruleset io.picolabs.plan.apps {
     name "applications"
     use module io.picolabs.wrangler alias wrangler
     use module html.plan alias html
-    shares apps, app_anchor
+    shares apps, app_anchor, apps_login_url
     provides event_url, query_url, html_page, app_list, app_anchor
   }
   global {
@@ -27,6 +27,9 @@ ruleset io.picolabs.plan.apps {
     app_anchor = function(rid){
       home_page = ent:apps{[rid,"home_url"]}
       <<<a href="#{query_url(rid,home_page)}">#{home_page}</a\>>>
+    }
+    apps_login_url = function(){
+      event_url(meta:rid,"ready_to_login","login")
     }
     html_page = function(title,head,body,_headers){
       html:header(title,head,_headers)
@@ -153,6 +156,7 @@ input.wide90 {
   }
   rule keepAppChannelsClean {
     select when io_picolabs_plan_apps app_installed
+             or io_picolabs_plan_apps app_eci_rotated
     foreach wrangler:channels(event:attr("tags")).reverse().tail() setting(chan)
     wrangler:deleteChannel(chan.get("id"))
   }
@@ -202,6 +206,32 @@ input.wide90 {
     fired {
       clear ent:apps{rid}
       raise io_picolabs_plan_apps event "app_deleted" attributes event:attrs
+    }
+  }
+  rule performOneTimeLogin {
+    select when io_picolabs_plan_apps ready_to_login
+    fired {
+      raise io_picolabs_plan_apps event "need_new_app_eci"
+      raise client event "secret_expired"
+    }
+  }
+  rule rotateAppECI {
+    select when io_picolabs_plan_apps need_new_app_eci
+    pre {
+      rid = event:attrs.get("rid") || meta:rid
+      spec = ent:apps{rid}
+      channel_tags = spec.get("tags")
+      ev_domain = evd_for_rid(rid)
+    }
+    every {
+      wrangler:createChannel(
+        channel_tags,
+        {"allow":[{"domain":ev_domain,"name":"*"}],"deny":[]},
+        {"allow":[{"rid":rid,"name":"*"}],"deny":[]}
+      )
+    }
+    fired {
+      raise io_picolabs_plan_apps event "app_eci_rotated" attributes spec
     }
   }
 }
