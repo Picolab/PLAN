@@ -8,7 +8,9 @@ ruleset html.plan {
     user_circle_svg = "https://raw.githubusercontent.com/Picolab/fully-sharded-database/main/images/user-circle-o-white.svg"
     header = function(title,scripts,_headers) {
       the_cookies = cookies(_headers)
-      sanity = ent:client_secret == the_cookies.get("sid")
+      the_name = wrangler:channels(tags).reverse().head().get("id")
+      the_sid = the_name => the_cookies.get(the_name) | null
+      sanity = the_sid.isnull() || ent:client_secret == the_sid
       sanity_mark = sanity => "" | << style="color:red">>
       pico_name = wrangler:name()
       <<<!DOCTYPE HTML>
@@ -108,10 +110,12 @@ body {
   }
   rule rotateClientSecret {
     select when client secret_expired
+             or html_plan channel_created
     pre {
       sid = random:uuid()
+      the_name = wrangler:channels(tags).reverse().head().get("id")
     }
-    send_directive("_cookie",{"cookie":<<sid=#{sid}; Path=/>>})
+    send_directive("_cookie",{"cookie":<<#{the_name}=#{sid}; Path=/>>})
     fired {
       ent:client_secret := sid
     }
