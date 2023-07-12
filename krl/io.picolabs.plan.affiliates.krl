@@ -3,7 +3,8 @@ ruleset io.picolabs.plan.affiliates {
     use module io.picolabs.wrangler alias wrangler
     use module com.mailjet.sdk alias email
     use module html.plan alias html
-    shares lastResponse, correlations, verifPage, expiredCID, sentPage
+    shares lastResponse, correlations,
+           verifPage, expiredCID, sentPage, afterVerif
   }
   global {
     lastResponse = function(){
@@ -78,6 +79,30 @@ and submit your email address again.</li>
 >>
       + html:footer()
     }
+    afterVerif = function(child_eci,_headers){
+      childRIDs = child_eci => wrangler:picoQuery(
+        child_eci,"io.picolabs.wrangler","installedRIDs") | []
+      appsRID = "io.picolabs.plan.apps"
+      hasRID = childRIDs >< appsRID
+      url = hasRID => wrangler:picoQuery(
+        child_eci,appsRID,"apps_login_url") | null
+      html:header("After Verification", "", _headers)
+      + <<
+<h1>After Verification</h1>
+<p>
+We see that you control this email address.
+</p>
+<p>
+Here is a one-time link to your pico's
+<a href="#{url}">Manage applications</a>
+page.
+</p>
+<p>
+When you see the page, you can bookmark it for future reference.
+</p>
+>>
+      + html:footer()
+    }
   }
   rule validateEmailSubmission {
     select when io_picolabs_plan_affiliates email_address_submitted
@@ -117,7 +142,7 @@ and submit your email address again.</li>
         child_eci,"io.picolabs.wrangler","installedRIDs") | []
       hasRID = childRIDs >< appsRID
       url = hasRID => wrangler:picoQuery(
-        child_eci,appsRID,"app_anchor",{"rid":appsRID}) | null
+        child_eci,appsRID,"apps_login_url") | null
       is_here = "Your pico is here: " + url
       sent_url = <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/sentPage.html>>
     }
@@ -188,7 +213,9 @@ and submit your email address again.</li>
   rule reactToChildCreation {
     select when wrangler:new_child_created
     pre {
-      child_eci = event:attr("eci")
+      child_eci = event:attrs.get("eci")
+      after_verif_url = <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/afterVerif.html>>
+        + "?child_eci=" + child_eci
     }
     if child_eci then every {
       event:send({"eci":child_eci,
@@ -199,6 +226,7 @@ and submit your email address again.</li>
         "domain":"wrangler","type":"install_ruleset_request",
         "attrs":{"absoluteURL": meta:rulesetURI,"rid":"io.picolabs.plan.apps"}
       })
+      send_directive("_redirect",{"url":after_verif_url})
     }
     fired {
       raise ruleset event "rulesets_installed_for_affiliate" // terminal event
