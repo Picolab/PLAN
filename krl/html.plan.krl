@@ -9,6 +9,7 @@ ruleset html.plan {
     header = function(title,scripts,_headers) {
       the_cookies = cookies(_headers)
       sanity = ent:client_secret == the_cookies.get("sid")
+      sanity_mark = sanity => "" | << style="color:red">>
       pico_name = wrangler:name()
       <<<!DOCTYPE HTML>
 <html>
@@ -63,7 +64,7 @@ body {
       <span class="plan">Pico Labs Affiliate Network</span>
       </a>
       <img class="user-circle" src="#{user_circle_svg}">
-      <span class="username">#{pico_name}</span>
+      <span class="username"#{sanity_mark}>#{pico_name}</span>
     </div>
     <div style="background-color:white;color:black;height:100%;border-radius:5px">
       <div id="section" style="height:100vh;margin-left:10px">
