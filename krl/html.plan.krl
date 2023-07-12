@@ -11,7 +11,7 @@ ruleset html.plan {
       self_tags = ["self","system"]
       the_name = wrangler:channels(self_tags).reverse().head().get("id")
       the_sid = the_name => the_cookies.get(the_name) | null
-      sanity = the_sid.isnull() || ent:client_secret == the_sid
+      sanity = ent:client_secret == the_sid
       sanity_mark = sanity => "" | << style="color:red">>
       pico_name = wrangler:name()
       <<<!DOCTYPE HTML>
