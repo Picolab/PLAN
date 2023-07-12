@@ -9,7 +9,6 @@ ruleset html.plan {
     header = function(title,scripts,_headers) {
       the_cookies = cookies(_headers)
       sanity = ent:client_secret == the_cookies.get("sid")
-      to_log = sanity.klog("sanity")
       pico_name = wrangler:name()
       <<<!DOCTYPE HTML>
 <html>
