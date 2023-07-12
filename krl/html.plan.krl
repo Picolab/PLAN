@@ -119,8 +119,8 @@ body {
   rule redirectHome {
     select when client secret_expired
     pre {
-      tags = ["app","applications"]
-      eci = wrangler:channels(tags).reverse().head().get("id")
+      app_tags = ["app","applications"]
+      eci = wrangler:channels(app_tags).reverse().head().get("id")
       rid = "io.picolabs.plan.apps"
       home_url = <<#{meta:host}/c/#{eci}/query/#{rid}/apps.html>>
     }
