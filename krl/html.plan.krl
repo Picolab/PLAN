@@ -110,7 +110,6 @@ body {
   }
   rule rotateClientSecret {
     select when client secret_expired
-             or html_plan channel_created
     pre {
       sid = random:uuid()
       the_name = wrangler:channels(tags).reverse().head().get("id")
