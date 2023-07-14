@@ -11,14 +11,17 @@
 8. Start your engine (check: we used `PICO_ENGINE_BASE_URL=https://… forever start .nvm/…/pico-engine`)
 
 ## Steps to get the affiliate code running
+1. In the developer UI of the pico engine, create a child pico named "Affiliates" (check)
+2. Install in it the `io.picolabs.plan.affiliates` ruleset (check)
+3. Add a new channel (tagged `plan` `affiliates`) allowing all events and queries for that ruleset (check)
+
+## Steps to get the site running
 1. Locate the pico engine `public` folder (check: it was deeply nested in the `~/.nvm/` folder)
 2. Place two of the pages from the `docs` folder therein: `plan.html` and `about.html` (check)
 3. In the `public` folder, copy `index.html` to someplace of your choice, then copy `plan.html` to be `index.html` (check)
-4. In the developer UI of the pico engine, create a child pico named "Affiliates" (check)
-5. Install in it the `io.picolabs.plan.affiliates` ruleset (check)
-6. Add a new channel (tagged `plan` `affiliates`) allowing all events and queries for that ruleset (check)
-7. Modify the `action` attribute of the `form` tag in `plan.html` to replace DOMAIN with our domain
-8. Modify the `action` attribute of the `form` tag in `plan.html` (aka `index.html`) to replace ECI with that channel's ID (check)
+4. Locate the `action` attribute of the `form` tag in `plan.html` (aka `index.html`) (check)
+5. Replace DOMAIN with our domain (check)
+6. Replace ECI with the ID of the channel tagged `plan` `affiliates` (check)
 
 ## Get some friends to help work out bugs/friction in the joining process
 (check)
