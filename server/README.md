@@ -17,7 +17,8 @@
 4. In the developer UI of the pico engine, create a child pico named "Affiliates" (check)
 5. Install in it the `io.picolabs.plan.affiliates` ruleset (check)
 6. Add a new channel (tagged `plan` `affiliates`) allowing all events and queries for that ruleset (check)
-7. Modify the `action` attribute of the `form` tag in `plan.html` (aka `index.html`) to use that channel's ID (check)
+7. Modify the `action` attribute of the `form` tag in `plan.html` to replace DOMAIN with our domain
+8. Modify the `action` attribute of the `form` tag in `plan.html` (aka `index.html`) to replace ECI with that channel's ID (check)
 
 ## Get some friends to help work out bugs/friction in the joining process
 (check)
