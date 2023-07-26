@@ -6,7 +6,7 @@ ruleset com.vcpnews.apod {
   }
   global {
     photo = function(_headers){
-      reload_url = app:event_url(meta:rid,"need_apod")
+      reload_url = app:event_url(meta:rid,"viewer_wants_apod")
       title = ent:apod.get("title")
       styles = <<
 <style type="text/css">
@@ -17,7 +17,7 @@ a#reload { float:right; text-decoration:none; margin:0.5em; }
 >>
       app:html_page("manage Astronomy Picture of the Day", styles,
 <<
-<a id="reload" href="#{reload_url}">⚙️</a>
+<a id="reload" href="#{reload_url}" title="reload">⚙️</a>
 <h1>Manage Astronomy Picture of the Day</h1>
 <img class="apod" src="#{ent:apod.get("url")}" alt="#{title}" title="#{title}">
 <p class="explanation">#{ent:apod.get("explanation")}</p>
@@ -41,6 +41,7 @@ a#reload { float:right; text-decoration:none; margin:0.5em; }
   }
   rule getAPOD {
     select when com_vcpnews_apod need_apod
+             or com_vcpnews_apod viewer_wants_apod
     pre {
       api_url = "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY"
       apod_response = http:get(api_url)
@@ -49,5 +50,12 @@ a#reload { float:right; text-decoration:none; margin:0.5em; }
     fired {
       ent:apod := apod
     }
+  }
+  rule redirectBack {
+    select when com_vcpnews_apod viewer_wants_apod
+    pre {
+      url = app:query_url(meta:rid,"photo.html")
+    }
+    send_directive("_redirect",{"url":url})
   }
 }
