@@ -226,10 +226,6 @@ When you see the page, you can bookmark it for future reference.
         "domain":"wrangler","type":"install_ruleset_request",
         "attrs":{"absoluteURL": meta:rulesetURI,"rid":"io.picolabs.plan.apps"}
       })
-      event:send({"eci":child_eci,
-        "domain":"wrangler","type":"install_ruleset_request",
-        "attrs":{"absoluteURL": meta:rulesetURI,"rid":"io.picolabs.plan.opt-out"}
-      })
       send_directive("_redirect",{"url":after_verif_url})
     }
     fired {

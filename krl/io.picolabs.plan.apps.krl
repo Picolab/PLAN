@@ -106,6 +106,9 @@ input.wide90 {
 >>
       + html:footer()
     }
+    builtins = [
+      "io.picolabs.plan.opt-out",
+    ]
   }
   rule initializeBaseCase {
     select when wrangler ruleset_installed
@@ -152,6 +155,17 @@ input.wide90 {
       ent:apps{rid} := spec
       raise io_picolabs_plan_apps event "app_installed" attributes spec
       raise event ev_domain+":factory_reset" for rid.klog("factory_reset")
+    }
+  }
+  rule installBuiltinApps {
+    select when io_picolabs_plan_apps factory_reset
+    foreach builtins setting(rid)
+    pre {
+      parts = meta:rid.split("/")
+      url = parts.splice(parts.length()-1,1,rid+".krl").join("/")
+    }
+    fired {
+      raise io_picolabs_plan_apps event "new_app" attributes {"url":url}
     }
   }
   rule keepAppChannelsClean {
