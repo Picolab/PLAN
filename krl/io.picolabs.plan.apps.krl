@@ -161,7 +161,7 @@ input.wide90 {
     select when io_picolabs_plan_apps factory_reset
     foreach builtins setting(rid)
     pre {
-      parts = meta:rid.split("/")
+      parts = meta:rulesetURI.split("/")
       url = parts.splice(parts.length()-1,1,rid+".krl").join("/")
     }
     fired {
