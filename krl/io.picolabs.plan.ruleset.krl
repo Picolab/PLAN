@@ -319,7 +319,7 @@ source_hash == meta_hash => <<
 <input name="src" type="hidden">
 <button type="submit" onclick="form.src.value=codeEditor.value">Save</button>
 </form>
-<p>Raw URL: <a href="#{rawURL}">#{rawURL}</a></p>
+<p>Raw URL: <a href="#{rawURL}" target="_blank">#{rawURL}</a></p>
 >>
 ,_headers)
     }
