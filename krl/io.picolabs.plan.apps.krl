@@ -107,7 +107,9 @@ input.wide90 {
       + html:footer()
     }
     builtins = [
+      "io.picolabs.plan.about",
       "io.picolabs.plan.opt-out",
+      "io.picolabs.plan.logging",
     ]
   }
   rule initializeBaseCase {
