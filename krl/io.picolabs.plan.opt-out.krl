@@ -12,9 +12,9 @@ ruleset io.picolabs.plan.opt-out {
 <h1>Manage Right to be Forgotten</h1>
 <p>This application allows you to opt out of the PLAN.</p>
 <p>You can exercise this right by clicking the button below.</p>
-<p>This will completely delete your pico and there will be no record of anything, not even your email address.</p>
+<p>This will completely delete your agent and there will be no record of anything, not even your email address.</p>
 <p>Opting out cannot be undone.</p>
-<p>You can of course join the network again at a later time. If you do, you will have an entirely new pico.</p>
+<p>You can of course join the network again at a later time. If you do, you will have an entirely new agent.</p>
 <form action="#{opt_out_url}" onsubmit="return confirm('Are you sure?')">
 <input type="checkbox" name="really">Yes, I really want to
 <button type="submit">opt out</button>.
