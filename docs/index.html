@@ -17,6 +17,18 @@
     ul#feature-list label {
       cursor: pointer;
     }
+    input[type="checkbox"] {
+      display: none;
+    }
+    span.feature-arrow-down {
+      display: none;
+    }
+    input[type="checkbox"]:checked ~ label span.feature-arrow {
+      display: none;
+    }
+    input[type="checkbox"]:checked ~ label span.feature-arrow-down {
+      display: inline;
+    }
     ul#feature-list li input[type="checkbox"]:checked ~ .feature-detail {
       display: block;
     }
@@ -57,28 +69,28 @@
           <ul id="feature-list">
             <li>
               <input type="checkbox" id="feature-1">
-              <label for="feature-1">Listen for events on the web and react to them</label>
+              <label for="feature-1"><span class="feature-arrow">▶️</span><span class="feature-arrow-down">🔽</span> Listen for events on the web and react to them</label>
               <div class="feature-detail"><p>Many places<sup>*</sup> on the web allow you to supply a webhook so that they can provide you with real-time information and updates. Your agent will be able to receive these real-time events and take action on your behalf, following your instructions.</p>
 <p><sup>*</sup>For example: Slack, Stripe, DocuSign, TrendSpider, and many more.</p></div>
             </li>
             <li>
               <input type="checkbox" id="feature-2">
-              <label for="feature-2">Wake up at a time you specify to check something on the web</label>
+              <label for="feature-2"><span class="feature-arrow">▶️</span><span class="feature-arrow-down">🔽</span> Wake up at a time you specify to check something on the web</label>
               <div class="feature-detail"><p>For example, PLAN provides an agent application which wakes up every weekday morning at 8 a.m. and checks the menu of a local cafeteria for "Ribs". On the mornings where ribs will be served for lunch, your agent would notify you by email or a chat message in time for you to make plans.</p></div>
             </li>
             <li>
               <input type="checkbox" id="feature-3">
-              <label for="feature-3">Notifiy you (according to your preferences) when things happen</label>
+              <label for="feature-3"><span class="feature-arrow">▶️</span><span class="feature-arrow-down">🔽</span> Notifiy you (according to your preferences) when things happen</label>
               <div class="feature-detail"><p>You decide how you will be notified in each circumstance. You can be notified by phone call, text message, chat message, email message, or an in-application message. It's your choice.</p></div>
             </li>
             <li>
               <input type="checkbox" id="feature-4">
-              <label for="feature-4">Receive data from your Internet of Things devices</label>
+              <label for="feature-4"><span class="feature-arrow">▶️</span><span class="feature-arrow-down">🔽</span> Receive data from your Internet of Things devices</label>
               <div class="feature-detail"><p>If you have devices that measure temperature, air pressure, humidity, water levels, etc. you can arrange for them to send this data to your agent.</p><p>Your agent can then be easily programmed to accept these readings, archive them, check for notable values and notify you, say of too-high or too-low temperatures.</p></div>
             </li>
             <li>
               <input type="checkbox" id="feature-5">
-              <label for="feature-5">Anything you (or a third party) conceives of and writes an application for</label>
+              <label for="feature-5"><span class="feature-arrow">▶️</span><span class="feature-arrow-down">🔽</span> Anything you (or a third party) conceives of and writes an application for</label>
               <div class="feature-detail"><p>We can't think of everything. You or other affiliates can build custom applications that you find useful for listening on the web, querying the web at set times, or anything else that's possible. Your agent can then be programmed to notify you, make a note of, or even take action directly on your behalf.</p><p>You can easily add such custom applications to your agent so that it can work smarter for you.</p></div>
             </li>
           </ul>
