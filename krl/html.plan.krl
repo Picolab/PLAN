@@ -138,7 +138,7 @@ body {
       self_tags = ["self","system"]
       the_name = wrangler:channels(self_tags).reverse().head().get("id")
     }
-    send_directive("_cookie",{"cookie":<<#{the_name}=; Path=/>>})
+    send_directive("_cookie",{"cookie":<<#{the_name}=; Path=/; Max-Age:-1>>})
     fired {
       clear ent:client_secret
     }
