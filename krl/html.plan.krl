@@ -131,4 +131,16 @@ body {
     }
     if eci then send_directive("_redirect",{"url":home_url})
   }
+  rule forgetAffiliate {
+    select when io_picolabs_plan_opt_out:affiliate_opts_out
+      really re#^.+$#
+    pre {
+      self_tags = ["self","system"]
+      the_name = wrangler:channels(self_tags).reverse().head().get("id")
+    }
+    send_directive("_cookie",{"cookie":<<#{the_name}=; Path=/>>})
+    fired {
+      clear ent:client_secret
+    }
+  }
 }
