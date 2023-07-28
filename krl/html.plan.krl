@@ -133,7 +133,6 @@ body {
   }
   rule forgetAffiliate {
     select when io_picolabs_plan_apps affiliate_opts_out
-      really re#^.+$#
     pre {
       self_tags = ["self","system"]
       the_name = wrangler:channels(self_tags).reverse().head().get("id")
