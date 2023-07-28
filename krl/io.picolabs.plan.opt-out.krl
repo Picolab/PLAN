@@ -23,18 +23,18 @@ ruleset io.picolabs.plan.opt-out {
     }
   }
   rule forgetAffiliate {
-    select when io_picolabs_plan_opt_out:affiliate_opts_out
+    select when io_picolabs_plan_opt_out affiliate_opts_out
       really re#^.+$#
-    send_directive("_redirect",{"url":meta:host})
     fired {
-      raise wrangler event "ready_for_deletion"
+      raise io_picolabs_plan_apps event "affiliate_opts_out"
     }
   }
   rule redirectBack {
     select when io_picolabs_plan_opt_out affiliate_opts_out
     pre {
-      url = app:query_url(meta:rid,"opt_out.html")
+      really = event:attrs{"really"}
+      url = really => app:query_url(meta:rid,"opt_out.html") | null
     }
-    send_directive("_redirect",{"url":url})
+    if not really then send_directive("_redirect",{"url":url})
   }
 }

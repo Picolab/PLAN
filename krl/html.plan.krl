@@ -132,7 +132,7 @@ body {
     if eci then send_directive("_redirect",{"url":home_url})
   }
   rule forgetAffiliate {
-    select when io_picolabs_plan_opt_out:affiliate_opts_out
+    select when io_picolabs_plan_apps affiliate_opts_out
       really re#^.+$#
     pre {
       self_tags = ["self","system"]

@@ -250,4 +250,11 @@ input.wide90 {
       raise io_picolabs_plan_apps event "app_eci_rotated" attributes spec
     }
   }
+  rule forgetAffiliate {
+    select when io_picolabs_plan_apps affiliate_opts_out
+    send_directive("_redirect",{"url":meta:host})
+    fired {
+      raise wrangler event "ready_for_deletion"
+    }
+  }
 }
