@@ -109,6 +109,7 @@ input.wide90 {
     builtins = [
       "io.picolabs.plan.about",
       "io.picolabs.plan.opt-out",
+      "io.picolabs.plan.profile",
       "io.picolabs.plan.logging",
     ]
   }

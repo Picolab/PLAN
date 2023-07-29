@@ -220,6 +220,10 @@ When you see the page, you can bookmark it for future reference.
     if child_eci then every {
       event:send({"eci":child_eci,
         "domain":"wrangler","type":"install_ruleset_request",
+        "attrs":{"absoluteURL": meta:rulesetURI,"rid":"io.picolabs.pds"}
+      })
+      event:send({"eci":child_eci,
+        "domain":"wrangler","type":"install_ruleset_request",
         "attrs":{"absoluteURL": meta:rulesetURI,"rid":"html.plan"}
       })
       event:send({"eci":child_eci,
