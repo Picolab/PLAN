@@ -20,6 +20,18 @@ ul#logging-list li {
 ul#logging-list label {
   cursor: pointer;
 }
+input[type="checkbox"] {
+  display: none;
+}
+span.entry-arrow-down {
+  display: none;
+}
+input[type="checkbox"]:checked ~ label span.entry-arrow {
+  display: none;
+}
+input[type="checkbox"]:checked ~ label span.entry-arrow-down {
+  display: inline;
+}
 ul#logging-list li input[type="checkbox"]:checked ~ .logging-detail {
   display: block;
 }
@@ -43,7 +55,7 @@ ul#logging-list li input[type="checkbox"]:checked ~ .logging-detail {
       entries = episode{"entries"}
       <<<li>
   <input type="checkbox" id="episode-#{index}" title="#{entries.length()}">
-  <label for="episode-#{index}">#{key}</label>
+  <label for="episode-#{index}"><span class="entry-arrow">▶️</span><span class="entry-arrow-down">🔽</span> #{key}</label>
   <pre class="logging-detail">#{entries.map(log_entry).join(chr(10))}
 </pre>
 </li>
