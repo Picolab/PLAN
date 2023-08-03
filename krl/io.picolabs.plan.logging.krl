@@ -55,7 +55,7 @@ ul#logging-list li input[type="checkbox"]:checked ~ .logging-detail {
       entries = episode{"entries"}
       <<<li>
   <input type="checkbox" id="episode-#{index}" title="#{entries.length()}">
-  <label for="episode-#{index}"><span class="entry-arrow">▶️</span><span class="entry-arrow-down">🔽</span> #{key}</label>
+  <label for="episode-#{index}"><span class="entry-arrow">▷</span><span class="entry-arrow-down">▽</span> #{key}</label>
   <pre class="logging-detail">#{entries.map(log_entry).join(chr(10))}
 </pre>
 </li>
