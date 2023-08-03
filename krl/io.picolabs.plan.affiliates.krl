@@ -31,10 +31,7 @@ bnc3.mailjet.com</span>
       html:header("email verification", "", _headers)
       + <<
 <h1>Verification email message sent</h1>
-#{sent_paragraph}<p>
-Please click on the link it contains,
-in order to verify that you control the email address.
-</p>
+#{sent_paragraph}
 <p>
 Didn't receive it?
 </p>
