@@ -17,6 +17,13 @@
     ul#feature-list label {
       cursor: pointer;
     }
+    ul#feature-list li {
+      background-color: silver;
+      margin: 0.5em;
+      padding: 5px;
+      border-radius: 5px;
+      max-width: 50vw;
+    }
     input[type="checkbox"] {
       display: none;
     }
@@ -33,10 +40,10 @@
       display: block;
     }
     .feature-detail {
-      max-width: 50vw;
-      border: 1px solid silver;
+      background-color: white;
       margin: 0.5em 0 0.5em 20px;
       display: none;
+      padding: 5px;
     }
     .feature-detail p {
       margin-inline-start: 0.5em;
@@ -69,39 +76,42 @@
           <ul id="feature-list">
             <li>
               <input type="checkbox" id="feature-1">
-              <label for="feature-1"><span class="feature-arrow">▶️</span><span class="feature-arrow-down">🔽</span> Listen for events on the web and react to them</label>
+              <label for="feature-1"><span class="feature-arrow">▷</span><span class="feature-arrow-down">▽</span>  Listen for events on the web and react to them</label>
               <div class="feature-detail"><p>Many places<sup>*</sup> on the web allow you to supply a webhook so that they can provide you with real-time information and updates. Your agent will be able to receive these real-time events and take action on your behalf, following your instructions.</p>
 <p><sup>*</sup>For example: Slack, Stripe, DocuSign, TrendSpider, and many more.</p></div>
             </li>
             <li>
               <input type="checkbox" id="feature-2">
-              <label for="feature-2"><span class="feature-arrow">▶️</span><span class="feature-arrow-down">🔽</span> Wake up at a time you specify to check something on the web</label>
+              <label for="feature-2"><span class="feature-arrow">▷</span><span class="feature-arrow-down">▽</span>  Wake up at a time you specify to check something on the web</label>
               <div class="feature-detail"><p>For example, PLAN provides an agent application which wakes up every weekday morning at 8 a.m. and checks the menu of a local cafeteria for "Ribs". On the mornings where ribs will be served for lunch, your agent would notify you by email or a chat message in time for you to make plans.</p></div>
             </li>
             <li>
               <input type="checkbox" id="feature-3">
-              <label for="feature-3"><span class="feature-arrow">▶️</span><span class="feature-arrow-down">🔽</span> Notifiy you (according to your preferences) when things happen</label>
+              <label for="feature-3"><span class="feature-arrow">▷</span><span class="feature-arrow-down">▽</span>  Notifiy you (according to your preferences) when things happen</label>
               <div class="feature-detail"><p>You decide how you will be notified in each circumstance. You can be notified by phone call, text message, chat message, email message, or an in-application message. It's your choice.</p></div>
             </li>
             <li>
               <input type="checkbox" id="feature-4">
-              <label for="feature-4"><span class="feature-arrow">▶️</span><span class="feature-arrow-down">🔽</span> Receive data from your Internet of Things devices</label>
+              <label for="feature-4"><span class="feature-arrow">▷</span><span class="feature-arrow-down">▽</span>  Receive data from your Internet of Things devices</label>
               <div class="feature-detail"><p>If you have devices that measure temperature, air pressure, humidity, water levels, etc. you can arrange for them to send this data to your agent.</p><p>Your agent can then be easily programmed to accept these readings, archive them, check for notable values and notify you, say of too-high or too-low temperatures.</p></div>
             </li>
             <li>
               <input type="checkbox" id="feature-5">
-              <label for="feature-5"><span class="feature-arrow">▶️</span><span class="feature-arrow-down">🔽</span> Anything you (or a third party) conceives of and writes an application for</label>
+              <label for="feature-5"><span class="feature-arrow">▷</span><span class="feature-arrow-down">▽</span>  Anything you (or a third party) conceives of and writes an application for</label>
               <div class="feature-detail"><p>We can't think of everything. You or other affiliates can build custom applications that you find useful for listening on the web, querying the web at set times, or anything else that's possible. Your agent can then be programmed to notify you, make a note of, or even take action directly on your behalf.</p><p>You can easily add such custom applications to your agent so that it can work smarter for you.</p></div>
             </li>
           </ul>
           <p>
-            You can acquire your personal agent by clicking on the link below.
+            You can acquire your personal agent by clicking on the button below.
           </p>
           <p>
             PLAN will host it for you until you choose another agent hosting provider, or exercise your right to be forgotten.
           </p>
           <p>
-            Become an affiliate! <a href="https://PLAN.picolabs.io">Join PLAN now</a>.
+            Become an affiliate!
+          </p>
+          <p>
+           <button onclick='location="https://PLAN.picolabs.io"'>Join PLAN now</button>
           </p>
         </div>
     </div>
