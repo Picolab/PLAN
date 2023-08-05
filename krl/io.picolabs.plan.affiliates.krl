@@ -58,9 +58,9 @@ and submit your email address again.
     sentPage = function(_headers){
       html:header("link sent", "", _headers)
       + <<
-<h1>Link to your pico</h1>
+<h1>Link to your personal agent</h1>
 #{sent_paragraph}<p>
-The link it contains will send you directly to your pico,
+The link it contains will send you directly to your personal agent,
 on its Manage applications page.
 </p>
 <p>
@@ -90,7 +90,7 @@ and submit your email address again.</li>
 We see that you control this email address.
 </p>
 <p>
-Here is a one-time link to your pico's
+Here is a one-time link to your personal agent's
 <a href="#{url}">Manage applications</a>
 page.
 </p>
@@ -140,11 +140,11 @@ When you see the page, you can bookmark it for future reference.
       hasRID = childRIDs >< appsRID
       url = hasRID => wrangler:picoQuery(
         child_eci,appsRID,"apps_login_url") | null
-      is_here = "Your pico is here: " + url
+      is_here = "Your personal agent is here: " + url
       sent_url = <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/sentPage.html>>
     }
     if url then every {
-      email:send_text(email_address,"your pico",is_here) setting(res)
+      email:send_text(email_address,"your personal agent",is_here) setting(res)
       send_directive("_redirect",{"url":sent_url})
     }
     fired {
