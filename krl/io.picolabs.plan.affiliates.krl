@@ -102,8 +102,8 @@ When you see the page, you can bookmark it for future reference.
     }
     confirm = function(cid,_headers){
       url = <<#{meta:host}/sky/event/#{meta:eci}/none/io_picolabs_plan_affiliates/email_address_verified>>
-      app:html_page("confirmation", "",
-<<
+      html:header("Confirmation", "", _headers)
+      + <<
 <h1>Confirmation</h1>
 <p>Please confirm that you wish to own/control a personal agent.</p>
 <form method="POST" action="#{url}">
@@ -111,7 +111,8 @@ When you see the page, you can bookmark it for future reference.
 <input type="hidden" name="request_method" value="POST">
 <button type="submit">Confirm</button>
 </form>
->>, _headers)
+>>
+      + html:footer()
     }
   }
   rule validateEmailSubmission {
