@@ -4,14 +4,14 @@ ruleset io.picolabs.plan.affiliates {
     use module com.mailjet.sdk alias email
     use module html.plan alias html
     shares lastResponse, correlations,
-           verifPage, expiredCID, sentPage, afterVerif
+           verifPage, confirm, expiredCID, sentPage, afterVerif
   }
   global {
     lastResponse = function(){
       ent:lastResponse
     }
     correlations = function(){
-      ent:correlation.encode() || {}
+      ent:correlation || {}
     }
     sent_paragraph = <<
 <p>
@@ -100,6 +100,19 @@ When you see the page, you can bookmark it for future reference.
 >>
       + html:footer()
     }
+    confirm = function(cid,_headers){
+      url = <<#{meta:host}/sky/event/#{meta:eci}/none/io_picolabs_plan_affiliates/email_address_verified>>
+      app:html_page("confirmation", "",
+<<
+<h1>Confirmation</h1>
+<p>Please confirm that you wish to own/control a personal agent.</p>
+<form method="POST" action="#{url}">
+<input type="hidden" name="cid" value="#{cid}">
+<input type="hidden" name="request_method" value="POST">
+<button type="submit">Confirm</button>
+</form>
+>>, _headers)
+    }
   }
   rule validateEmailSubmission {
     select when io_picolabs_plan_affiliates email_address_submitted
@@ -169,7 +182,7 @@ When you see the page, you can bookmark it for future reference.
       cid = event:attrs.get("cid")
       email_address = ent:correlation.get(cid)
       eci = meta:eci // TODO use a one-time ECI
-      url = <<#{meta:host}/sky/event/#{eci}/none/io_picolabs_plan_affiliates/email_address_verified?cid=#{cid}>>
+      url = <<#{meta:host}/sky/event/#{eci}/none/io_picolabs_plan_affiliates/email_address_verified?cid=#{cid}&request_method=GET>>
       subject = "verify your email address"
       message = "Click here to verify your email address: " + url
       verif_url = <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/verifPage.html?cid=#{cid}>>
@@ -190,6 +203,18 @@ When you see the page, you can bookmark it for future reference.
       expired_url = <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/expiredCID.html>>
     }
     send_directive("_redirect",{"url":expired_url})
+  }
+  rule ignoreGET {
+    select when io_picolabs_plan_affiliates email_address_verified
+      request_method re#^GET$#
+    pre {
+      cid = event:attrs.get("cid")
+      confirm_url = <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/confirm.html?cid=#{cid}>>
+    }
+    send_directive("_redirect",{"url":confirm_url})
+    fired {
+      last
+    }
   }
   rule handleEmailVerification {
     select when io_picolabs_plan_affiliates email_address_verified
