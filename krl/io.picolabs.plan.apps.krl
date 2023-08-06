@@ -3,7 +3,7 @@ ruleset io.picolabs.plan.apps {
     name "applications"
     use module io.picolabs.wrangler alias wrangler
     use module html.plan alias html
-    shares apps, app_anchor, apps_login_url
+    shares apps, app_anchor, apps_login_url, apps_rotate_eci
     provides event_url, query_url, html_page, app_list, app_anchor
   }
   global {
@@ -112,6 +112,20 @@ input.wide90 {
       "io.picolabs.plan.profile",
       "io.picolabs.plan.logging",
     ]
+    apps_rotate_eci = function(_headers){
+      html:header("agent login",styles,_headers)
+      + <<
+<h1>Agent Login</h1>
+<p>You are now ready to login to your personal agent.</p>
+<form method="POST" action="#{apps_login_url()}">
+<input type="hidden" name="request_method" value="POST">
+<input type="checkbox" name="new_eci"> New ECI?
+<br>
+<button type="submit">Login</button>
+</form>
+>>
+      + html:footer()
+    }
   }
   rule initializeBaseCase {
     select when wrangler ruleset_installed
@@ -225,10 +239,24 @@ input.wide90 {
       raise io_picolabs_plan_apps event "app_deleted" attributes event:attrs
     }
   }
+  rule ignoreGET {
+    select when io_picolabs_plan_apps ready_to_login
+      request_method re#^GET$#
+    pre {
+      url = query_url(meta:rid,"apps_rotate_eci")
+    }
+    send_directive("_redirect",{"url":url})
+    fired {
+      last
+    }
+  }
   rule performOneTimeLogin {
     select when io_picolabs_plan_apps ready_to_login
+      new_eci re#(.*)#
+      request_method re#^POST$#
+      setting(new_eci,request_method)
     fired {
-      raise io_picolabs_plan_apps event "need_new_app_eci"
+      raise io_picolabs_plan_apps event "need_new_app_eci" if new_eci
       raise client event "secret_expired"
     }
   }

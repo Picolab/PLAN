@@ -82,7 +82,7 @@ and submit your email address again.</li>
       appsRID = "io.picolabs.plan.apps"
       hasRID = childRIDs >< appsRID
       url = hasRID => wrangler:picoQuery(
-        child_eci,appsRID,"apps_login_url") | null
+        child_eci,appsRID,"apps_login_url")+"?request_method=GET" | null
       html:header("After Verification", "", _headers)
       + <<
 <h1>After Verification</h1>
