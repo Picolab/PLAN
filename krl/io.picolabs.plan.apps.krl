@@ -243,7 +243,7 @@ input.wide90 {
     select when io_picolabs_plan_apps ready_to_login
       request_method re#^GET$#
     pre {
-      url = query_url(meta:rid,"apps_rotate_eci")
+      url = query_url(meta:rid,"apps_rotate_eci.html")
     }
     send_directive("_redirect",{"url":url})
     fired {
