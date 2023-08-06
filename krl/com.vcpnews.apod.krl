@@ -20,6 +20,7 @@ a#reload { float:right; text-decoration:none; margin:0.5em; }
 <a id="reload" href="#{reload_url}" title="reload">⚙️</a>
 <h1>Manage Astronomy Picture of the Day</h1>
 <img class="apod" src="#{ent:apod.get("url")}" alt="#{title}" title="#{title}">
+<p class="explanation">#{title}</p>
 <p class="explanation">#{ent:apod.get("explanation")}</p>
 <p class="explanation">#{ent:apod.get("date") || ""}</p>
 <br clear="all">
