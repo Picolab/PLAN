@@ -153,7 +153,7 @@ When you see the page, you can bookmark it for future reference.
         child_eci,"io.picolabs.wrangler","installedRIDs") | []
       hasRID = childRIDs >< appsRID
       url = hasRID => wrangler:picoQuery(
-        child_eci,appsRID,"apps_login_url") | null
+        child_eci,appsRID,"apps_login_url")+"?request_method=GET" | null
       is_here = "Your personal agent is here: " + url
       sent_url = <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/sentPage.html>>
     }
