@@ -12,8 +12,9 @@ ruleset html.plan {
       the_name = wrangler:channels(self_tags).reverse().head().get("id")
       the_sid = the_name => the_cookies.get(the_name) | null
       sanity = ent:client_secret == the_sid
-      sanity_mark = sanity => "" | << style="color:red">>
       pico_name = wrangler:name()
+      is_affiliates = pico_name == "Affiliates"
+      sanity_mark = sanity || is_affiliates => "" | << style="color:red">>
       <<<!DOCTYPE HTML>
 <html>
   <head>
