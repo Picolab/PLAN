@@ -79,7 +79,7 @@ You may edit your information: click, change, and press Enter key (or Esc to und
       }
       function save_it(ev){
         var e = ev || window.event;
-        var thespan = e.target.textContent;
+        var thespan = encodeURIComponent(e.target.textContent);
         var thename = e.target.previousElementSibling.textContent;
         var oldspan = sessionStorage.getItem(thename);
         if(oldspan && oldspan !== thespan){
