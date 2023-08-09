@@ -4,7 +4,7 @@ ruleset io.picolabs.plan.introspect {
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.subscription alias subs
     use module io.picolabs.plan.apps alias app
-    shares introspect, channels, channel//,  subscriptions, subscription TODO
+    shares introspect, channels, channel,  subscriptions//, subscription TODO
   }
   global {
     rsRID = "io.picolabs.plan.ruleset"
@@ -12,7 +12,7 @@ ruleset io.picolabs.plan.introspect {
       netid = wrangler:name()
       repo_name = netid + "/bazaar"
       subs_count = subs:established()
-        .filter(function(s){s{"Tx_role"}!="participant list"})
+        .filter(function(s){s{"Tx_role"}!="affiliate list"})
         .length()
       pECI = wrangler:parent_eci()
       pName = pECI.isnull() => null | wrangler:picoQuery(pECI,"io.picolabs.wrangler","name")
@@ -20,7 +20,7 @@ ruleset io.picolabs.plan.introspect {
       apps_link = <<<a href="#{app:query_url("io.picolabs.plan.apps","apps.html")}">apps.html</a\>>>
       rs_link = <<<a href="../io.picolabs.plan.ruleset/rulesets.html">rulesets</a\>>>
       cs_link = <<<a href="channels.html">channels</a\>>>
-      ss_link = <<#{subs_count} <a href="subscriptions.html">subscription#{subs_count==1 => "" | "s"}</a\>>>
+      ss_link = <<#{subs_count || "no"} <a href="subscriptions.html">subscription#{subs_count==1 => "" | "s"}</a\>>>
       child_count = wrangler:children().length()
       one_child = child_count==1 => wrangler:children().head() | false
       child_eci = child_count==1 && one_child{"eci"}
@@ -35,7 +35,7 @@ ruleset io.picolabs.plan.introspect {
 of which #{apps.length()} are apps.
 The apps can be managed with #{apps_link}.</p>
 <p>It has #{wrangler:channels().length()} #{cs_link}.</p>
-<p>It has #{subs_count => ss_link | "no subscriptions"}.
+<p>It has #{ss_link}.</p>
 >>
 + //TODO These can be managed with #{app:app_anchor("io.picolabs.plan.relate")}.</p>
 <<
@@ -114,7 +114,7 @@ You have a child pico which hosts apps from a repository that it maintains.
     }
     subscriptions = function(_headers){
       ss = subs:established()
-        .filter(function(s){s{"Tx_role"}!="participant list"})
+        .filter(function(s){s{"Tx_role"}!="affiliate list"})
       one_subs = function(s){
         <<<tr>
 <td><a href="subscription.html?Id=#{s{"Id"}}"><code>#{s{"Id"}}</code></a></td>
@@ -127,6 +127,7 @@ You have a child pico which hosts apps from a repository that it maintains.
       }
       app:html_page("Your subscriptions","",
       <<<h1>Your subscriptions</h1>
+<p>The well-known ECI for new subscriptions is #{subs:wellKnown_Rx()}.</p>
 <table>
 <tr>
 <td>Id</td>
