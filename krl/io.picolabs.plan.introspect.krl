@@ -103,7 +103,7 @@ You have a child pico which hosts apps from a repository that it maintains.
     }
     participant_name = function(eci){
       thisPico = ctx:channels.any(function(c){c{"id"}==eci})
-      thisPico => "yourself" | ctx:query(eci,"byu.hr.core","displayName")
+      thisPico => "yourself" | ctx:query(eci,"io.picolabs.wrangler","name")
     }
     subs_tags = function(s){
       wrangler:channels()
