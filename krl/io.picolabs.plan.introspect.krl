@@ -12,7 +12,6 @@ ruleset io.picolabs.plan.introspect {
       netid = wrangler:name()
       repo_name = netid + "/bazaar"
       subs_count = subs:established()
-        .filter(function(s){s{"Tx_role"}!="affiliate list"})
         .length()
       pECI = wrangler:parent_eci()
       pName = pECI.isnull() => null | wrangler:picoQuery(pECI,"io.picolabs.wrangler","name")
@@ -37,7 +36,7 @@ The apps can be managed with #{apps_link}.</p>
 <p>It has #{wrangler:channels().length()} #{cs_link}.</p>
 <p>It has #{ss_link}.</p>
 >>
-+ //TODO These can be managed with #{app:app_anchor("io.picolabs.plan.relate")}.</p>
++ //TODO Relationships can be managed with #{app:app_anchor("io.picolabs.plan.relate")}.</p>
 <<
 <p>
 It has #{child_count} child pico#{
@@ -114,7 +113,6 @@ You have a child pico which hosts apps from a repository that it maintains.
     }
     subscriptions = function(_headers){
       ss = subs:established()
-        .filter(function(s){s{"Tx_role"}!="affiliate list"})
       one_subs = function(s){
         <<<tr>
 <td><a href="subscription.html?Id=#{s{"Id"}}"><code>#{s{"Id"}}</code></a></td>
