@@ -128,7 +128,7 @@ You have a child pico which hosts apps from a repository that it maintains.
       wellKnown_Rx = subs:wellKnown_Rx().get("id")
       app:html_page("Your subscriptions","",
       <<<h1>Your subscriptions</h1>
-<p>The well-known ECI for new subscriptions is #{wellKnown_Rx}.</p>
+<p>The well-known ECI for new subscriptions is <code>#{wellKnown_Rx}</code>.</p>
 <p>You have #{ss.length() || "no"} subscriptions.</p>
 <table>
 <tr>
