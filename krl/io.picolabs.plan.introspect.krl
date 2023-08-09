@@ -4,7 +4,7 @@ ruleset io.picolabs.plan.introspect {
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.subscription alias subs
     use module io.picolabs.plan.apps alias app
-    shares introspect, channels, channel,  subscriptions//, subscription TODO
+    shares introspect, channels, channel,  subscriptions, subscription
   }
   global {
     rsRID = "io.picolabs.plan.ruleset"
