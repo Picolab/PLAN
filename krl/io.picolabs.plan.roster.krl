@@ -6,11 +6,15 @@ ruleset io.picolabs.plan.roster {
   global {
     roster = function(){
       entries = subs:established("Rx_role","affiliate list")
+        .map(function(s){
+          Id = s.get("Id")
+          s.put("Tx_name",ent:names.get(Id))
+        })
 <<<h1>Alphabetic List</h1>
 <pre>#{entries.encode()}</pre>
 <dl>
 #{entries.map(function(s){
-  <<<dt>#{ent:names.get(s.get("Id"))}</dt><dd>#{s.get("Tx")}</dd>
+  <<<dt>#{s.get("Tx_name")}</dt><dd>#{s.get("Tx")}</dd>
 >>
 }).join("")}</dl>
 >>
