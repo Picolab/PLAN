@@ -15,6 +15,11 @@ ruleset io.picolabs.plan.roster {
         })
 <<<h1>Alphabetic List</h1>
 <pre>#{entries.encode()}</pre>
+<dl>
+#{entries.map(function(s){
+  <<<dt>#{s.get("Tx_name")}</dt><dd>#{s.get("Tx")}</dd>
+>>
+}).join("")}</dl>
 >>
     }
   }
