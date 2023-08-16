@@ -4,12 +4,16 @@ ruleset io.picolabs.plan.roster {
     shares roster
   }
   global {
+    by = function(key){
+      function(a,b){a{key}.encode() cmp b{key}.encode()}
+    }
     roster = function(){
       entries = subs:established("Rx_role","affiliate list")
         .map(function(s){
           Id = s.get("Id")
           s.put("Tx_name",ent:names.get(Id))
         })
+        .sort(by("Tx_name"))
 <<<h1>Alphabetic List</h1>
 <pre>#{entries.encode()}</pre>
 <dl>
