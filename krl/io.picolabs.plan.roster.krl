@@ -1,4 +1,17 @@
 ruleset io.picolabs.plan.roster {
+  meta {
+    use module io.picolabs.subscription alias subs
+    use module io.picolabs.wrangler alias wrangler
+    shares roster
+  }
+  global {
+    roster = function(){
+      entries = subs:established("Rx_role","affiliate list")
+<<<h1>Alphabetic List</h1>
+<pre>#{entries.encode()}</pre>
+>>
+    }
+  }
   rule acceptAffiliate {
     select when wrangler inbound_pending_subscription_added
     pre {
