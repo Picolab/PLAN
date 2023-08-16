@@ -5,8 +5,14 @@ ruleset io.picolabs.plan.roster {
     shares roster
   }
   global {
+    wrangler_rid = "io.picolabs.wrangler"
     roster = function(){
       entries = subs:established("Rx_role","affiliate list")
+        .map(function(s){
+          eci = s.get("Tx")
+          name = wrangler:picoQuery(eci,wrangler_rid,"name")
+          s.put("Tx_name",name)
+        })
 <<<h1>Alphabetic List</h1>
 <pre>#{entries.encode()}</pre>
 >>
