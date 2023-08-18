@@ -5,6 +5,7 @@ ruleset io.picolabs.plan.profile {
     use module io.picolabs.pds alias pds
     use module io.picolabs.wrangler alias wrangler
     shares profile
+    provides data
   }
   global {
     cell_attrs = function(prompt){
@@ -90,6 +91,14 @@ You may edit your information: click, change, and press Enter key (or Esc to und
       }
     </script>
 >>
+    }
+    data = function(){
+      second_word = function(s){s.split(" ")[1]}
+      element_names.tail().reduce(
+        function(a,n){
+          k = n.second_word()
+          a.put(k,pds:getData("profile",n))
+        },{})
     }
   }
   rule initializeProfile {
