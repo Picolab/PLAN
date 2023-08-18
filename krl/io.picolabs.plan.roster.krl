@@ -18,7 +18,8 @@ ruleset io.picolabs.plan.roster {
 <pre>#{entries.encode()}</pre>
 <dl>
 #{entries.map(function(s){
-  <<<dt>#{s.get("Tx_name")}</dt><dd>#{s.get("Tx")}</dd>
+  entry_eci = ent:data.get([s.get("Id"),"wellKnown_Rx"]) || s.get("Tx")
+  <<<dt>#{s.get("Tx_name")}</dt><dd>#{entry_eci}</dd>
 >>
 }).join("")}</dl>
 >>
