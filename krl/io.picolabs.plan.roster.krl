@@ -43,4 +43,10 @@ ruleset io.picolabs.plan.roster {
       ent:data{Id} := event:attrs.get("data")
     }
   }
+  rule forgetFormerAffiliate {
+    select when wrangler subscription_removed
+    fired {
+      ent:data{event:attrs.get("Id")} := null
+    }
+  }
 }
