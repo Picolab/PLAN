@@ -11,7 +11,7 @@ ruleset io.picolabs.plan.roster {
       entries = subs:established("Rx_role","affiliate list")
         .map(function(s){
           Id = s.get("Id")
-          s.put("Tx_name",ent:names.get(Id) || ent:data.get(["Id","name"]))
+          s.put("Tx_name",ent:names.get(Id) || ent:data.get([Id,"name"]))
         })
         .sort(by("Tx_name"))
 <<<h1>Alphabetic List</h1>
