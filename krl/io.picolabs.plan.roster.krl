@@ -11,7 +11,7 @@ ruleset io.picolabs.plan.roster {
       entries = subs:established("Rx_role","affiliate list")
         .map(function(s){
           Id = s.get("Id")
-          s.put("Tx_name",ent:names.get(Id))
+          s.put("Tx_name",ent:names.get(Id) || ent:data.get(["Id","name"]))
         })
         .sort(by("Tx_name"))
 <<<h1>Alphabetic List</h1>
@@ -42,6 +42,14 @@ ruleset io.picolabs.plan.roster {
       setting(Id,name)
     fired {
       ent:names{Id} := name
+    }
+  }
+  rule memoizeData {
+    select when io_picolabs_plan_roster data_provided
+      Id re#(.+)#
+      setting(Id)
+    fired {
+      ent:data{Id} := event:attrs.get("data")
     }
   }
 }
