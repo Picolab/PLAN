@@ -4,7 +4,7 @@ ruleset io.picolabs.plan.directory {
     use module io.picolabs.plan.apps alias app
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.subscription alias subs
-    use module io.picolabs.pds alias pds
+    use module io.picolabs.plan.profile alias profile
     shares directory, roster
   }
   global {
@@ -125,7 +125,7 @@ ruleset io.picolabs.plan.directory {
     select when wrangler subscription_added
     pre {
       Id = event:attrs.get("Id")
-      name = pds:getData("profile","Your name")
+      name = profile:data().get("name")
         || wrangler:name()
     }
     if Id then event:send({
