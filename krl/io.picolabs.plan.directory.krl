@@ -60,10 +60,21 @@ ruleset io.picolabs.plan.directory {
     roster = function(_headers){
       agg_eci = subs:established("Rx_role","affiliate").head().get("Tx")
       roster_rid = "io.picolabs.plan.roster"
+      src = wrangler:picoQuery(agg_eci,roster_rid,"roster")
+        .replace(re#<pre>.*</pre>#,"")
+        .split(re#</?dd>#)
+        .reduce(
+          function(a,s,i){
+            len = s.length()
+            redacted = i%2
+              => s.split("").splice(3,len-6,"…redacted…").join("")
+               | s
+            a+ (i%2 => "<dd>"+redacted+"</dd>" | s)
+          },"")
       app:html_page(
         "Alphabetic List", // title hard-coded
         "",
-        wrangler:picoQuery(agg_eci,roster_rid,"roster"),
+        src,
         _headers
       )
     }
