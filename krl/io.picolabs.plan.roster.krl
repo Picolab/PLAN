@@ -26,8 +26,8 @@ ruleset io.picolabs.plan.roster {
   Id = s.get("Id")
   <<<tr>
 <td>#{s.get("Tx_name")}</td>
-<td>#{ent:data.get([Id,"phone"])}</td>
-<td>#{ent:data.get([Id,"email"])}</td>
+<td>#{ent:data.get([Id,"phone"]) || ""}</td>
+<td>#{ent:data.get([Id,"email"]) || ""}</td>
 <td><button>#{ent:data.get([Id,"wellKnown_Rx"])}</button></td>
 </tr>
 >>
