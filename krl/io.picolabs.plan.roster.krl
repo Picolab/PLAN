@@ -15,12 +15,23 @@ ruleset io.picolabs.plan.roster {
         })
         .sort(by("Tx_name"))
 <<<h1>Alphabetic List</h1>
-<dl>
+<table>
+<tr>
+<th>Name</th>
+<th>Phone</th>
+<th>Email</th>
+<th>wellKnown_Rx</th>
+</tr>
 #{entries.map(function(s){
-  entry_eci = ent:data.get([s.get("Id"),"wellKnown_Rx"])
-  <<<dt>#{s.get("Tx_name")}</dt><dd>#{entry_eci}</dd>
+  Id = s.get("Id")
+  <<<tr>
+<td>#{s.get("Tx_name")}</td>
+<td>#{s.get([Id,"phone"])}</td>
+<td>#{s.get([Id,"email"])}</td>
+<td>#{s.get([Id,"wellKnown_Rx"])}</td>
+</tr>
 >>
-}).join("")}</dl>
+}).join("")}</table>
 >>
     }
   }
