@@ -11,14 +11,13 @@ ruleset io.picolabs.plan.roster {
       entries = subs:established("Rx_role","affiliate list")
         .map(function(s){
           Id = s.get("Id")
-          s.put("Tx_name",ent:names.get(Id) || ent:data.get([Id,"name"]))
+          s.put("Tx_name", ent:data.get([Id,"name"]))
         })
         .sort(by("Tx_name"))
 <<<h1>Alphabetic List</h1>
-<pre>#{entries.encode()}</pre>
 <dl>
 #{entries.map(function(s){
-  entry_eci = ent:data.get([s.get("Id"),"wellKnown_Rx"]) || s.get("Tx")
+  entry_eci = ent:data.get([s.get("Id"),"wellKnown_Rx"])
   <<<dt>#{s.get("Tx_name")}</dt><dd>#{entry_eci}</dd>
 >>
 }).join("")}</dl>
@@ -34,15 +33,6 @@ ruleset io.picolabs.plan.roster {
     if new_affiliate then noop()
     fired {
       raise wrangler event "pending_subscription_approval" attributes event:attrs
-    }
-  }
-  rule memoizeName {
-    select when io_picolabs_plan_roster name_provided
-      Id re#(.+)#
-      name re#(.+)#
-      setting(Id,name)
-    fired {
-      ent:names{Id} := name
     }
   }
   rule memoizeData {
