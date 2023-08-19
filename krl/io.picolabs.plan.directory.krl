@@ -60,20 +60,22 @@ ruleset io.picolabs.plan.directory {
     roster = function(_headers){
       agg_eci = subs:established("Rx_role","affiliate").head().get("Tx")
       roster_rid = "io.picolabs.plan.roster"
+      onclick = function(s){
+        << onclick="do_it('#{s}'); void 0">>
+      }
       src = wrangler:picoQuery(agg_eci,roster_rid,"roster")
-        .replace(re#<pre>.*</pre>#,"")
-        .split(re#</?dd>#)
+        .replace("wellKnown_Rx","propose relationship")
+        .split(re#</?button>#)
         .reduce(
           function(a,s,i){
-            len = s.length()
-            redacted = i%2
-              => s.split("").splice(3,len-6,"…redacted…").join("")
-               | s
-            a+ (i%2 => "<dd>"+redacted+"</dd>" | s)
+            r = i%2 == 0 => s
+              | ctx:channels.any(function(c){c{"id"}==s}) => "N/A"
+              | "<button"+onclick(s)+">"+s+"</button>"
+            a + (i%2 => r | s)
           },"")
       app:html_page(
         "Alphabetic List", // title hard-coded
-        "",
+        "<script>function do_it(s){alert(':'+s)}</script>",
         src,
         _headers
       )
@@ -121,18 +123,18 @@ ruleset io.picolabs.plan.directory {
     }
     send_directive("_redirect",{"url":url})
   }
-  rule sendOverName {
+  rule sendOverProfileData {
     select when wrangler subscription_added
     pre {
       Id = event:attrs.get("Id")
-      name = profile:data().get("name")
-        || wrangler:name()
+      data = profile:data()
+        .put("wellKnown_Rx",subs:wellKnown_Rx().get("id"))
     }
     if Id then event:send({
       "eci":event:attrs.get("Tx"),
       "domain":"io_picolabs_plan_roster",
-      "type":"name_provided",
-      "attrs":{"Id":Id,"name":name}
+      "type":"data_provided",
+      "attrs":{"Id":Id,"data":data}
     })
   }
 }
