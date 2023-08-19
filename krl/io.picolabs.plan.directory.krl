@@ -127,10 +127,11 @@ ruleset io.picolabs.plan.directory {
     select when wrangler subscription_added
     pre {
       Id = event:attrs.get("Id")
-      data = profile:data()
-        .put("wellKnown_Rx",subs:wellKnown_Rx().get("id"))
+      aggregator = event:attrs.get(["bus","Tx_role"]).match(re# list$#)
+      data = aggregator => profile:data()
+        .put("wellKnown_Rx",subs:wellKnown_Rx().get("id")) | null
     }
-    if Id then event:send({
+    if Id && aggregator then event:send({
       "eci":event:attrs.get("Tx"),
       "domain":"io_picolabs_plan_roster",
       "type":"data_provided",
