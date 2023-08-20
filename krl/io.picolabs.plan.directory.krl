@@ -61,8 +61,9 @@ ruleset io.picolabs.plan.directory {
       agg_eci = subs:established("Rx_role","affiliate").head().get("Tx")
       roster_rid = "io.picolabs.plan.roster"
       onclick = function(s){
-        << onclick="do_it('#{s}'); void 0">>
+        << onclick="do_it(this); void 0">>
       }
+      base_url = app:event_url(meta:rid,"relationship_proposed")
       src = wrangler:picoQuery(agg_eci,roster_rid,"roster")
         .replace("wellKnown_Rx","propose relationship")
         .split(re#</?button>#)
@@ -75,10 +76,24 @@ ruleset io.picolabs.plan.directory {
           },"")
       app:html_page(
         "Alphabetic List", // title hard-coded
-        "<script>function do_it(s){alert(':'+s)}</script>",
+        roster_script(base_url),
         src,
         _headers
       )
+    }
+    roster_script = function(base_url){
+      <<<script type="text/javascript">
+function do_it(b){
+  Rx_role = prompt("Your role in the proposed relationship?")
+  Tx_role = prompt("Their role in the proposed relationship?")
+  location = '#{base_url}'
+           + '?wellKnown_Tx='+b.innerText
+           + '&Rx_role='+Rx_role
+           + '&Tx_role='+Tx_role
+           + '&Tx_name='+b.parentElement.parentElement.children[0].innerText
+}
+</script>
+>>
     }
   }
   rule joinDirectory {
@@ -115,9 +130,30 @@ ruleset io.picolabs.plan.directory {
       ent:member_of{wellKnown_Tx} := time:now()
     }
   }
+  rule proposeRelationship {
+    select when io_picolabs_plan_directory relationship_proposed
+      Rx_role re#(.+)#
+      Tx_role re#(.+)#
+      wellKnown_Tx re#(.+)#
+      Tx_name re#(.+)#
+      setting(Rx_role,Tx_role,wellKnown_Tx,Tx_name)
+    pre {
+      channel_name = wellKnown_Tx + "-" + ctx:channels.head().get("id")
+      channel_type = "relationship"
+    }
+    fired {
+      raise wrangler event "subscription" attributes {
+        "wellKnown_Tx": wellKnown_Tx,
+        "Rx_role": Rx_role, "Tx_role": Tx_role,
+        "name": channel_name, "channel_type": channel_type,
+        "Tx_name": Tx_name, "Rx_name": profile:data().get("name"),
+      }
+    }
+  }
   rule redirectBack {
     select when io_picolabs_plan_directory join_request
              or io_picolabs_plan_directory leave_request
+             or io_picolabs_plan_directory relationship_proposed
     pre {
       url = app:query_url(meta:rid,"directory.html")
     }
