@@ -23,6 +23,9 @@ ruleset html.plan {
       sanity_mark = sanity || is_affiliates => "" | << style="color:red">>
       display_name = is_affiliates => pico_name |
         pds:getData(["profile","Your name"]) || pico_name
+      plan_url = "/plan.html"
+      landing_url = app_url("applications","io.picolabs.plan.apps","apps.html")
+      profile_url = app_url("contact-information","io.picolabs.plan.profile","profile.html")
       <<<!DOCTYPE HTML>
 <html>
   <head>
@@ -71,12 +74,16 @@ body {
   </head>
   <body>
     <div id="plan-bar">
+      <a href="#{plan_url}">
       <img class="logo" src="#{pico_logo}" alt="pico logo">
-      <a href="/plan.html">
+      </a>
+      <a href="#{landing_url}">
       <span class="plan">Pico Labs Affiliate Network</span>
       </a>
+      <a href="#{profile_url}">
       <img class="user-circle" src="#{user_circle_svg}">
       <span class="username"#{sanity_mark}>#{display_name}</span>
+      </a>
     </div>
     <div style="background-color:white;color:black;height:100%;border-radius:5px">
       <div id="section" style="min-height:100vh;margin-left:10px">
