@@ -1,6 +1,7 @@
 ruleset html.plan {
   meta {
     use module io.picolabs.wrangler alias wrangler
+    use module io.picolabs.pds alias pds
     provides header, footer, cookies
   }
   global {
@@ -15,6 +16,8 @@ ruleset html.plan {
       pico_name = wrangler:name()
       is_affiliates = pico_name == "Affiliates"
       sanity_mark = sanity || is_affiliates => "" | << style="color:red">>
+      display_name = is_affiliates => pico_name |
+        pds:getData(["profile","Your name"]) || pico_name
       <<<!DOCTYPE HTML>
 <html>
   <head>
