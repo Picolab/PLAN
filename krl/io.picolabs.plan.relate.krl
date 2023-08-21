@@ -14,11 +14,6 @@ ruleset io.picolabs.plan.relate.krl {
         Id = rel.get("Id")
         hideBookkeepingRel = rel.get("Rx_role") == "affiliate"
           && rel.get("Tx_role") == "affiliate list"
-        displayName = function(eci){
-          thisPico = ctx:channels.any(function(c){c{"id"}==eci})
-          eci.isnull() => (Rx.isnull() =>"unknown" | "someone") |
-          thisPico     => "you" | ent:names.get([Id,"Tx_name"])
-        }
         dmap = {
           "outb":{"eid":"cancel-outbound",
                   "type":"outbound_cancellation",
@@ -44,8 +39,8 @@ ruleset io.picolabs.plan.relate.krl {
           dmap{[type,"text"]}}</a> >>
         hideBookkeepingRel => "" |
         <<<li><span style="display:none">#{rel.encode()}</span>
-#{displayName(Rx).capitalize()} as #{rel.get("Rx_role")} and
-#{displayName(rel.get("Tx"))} as #{rel.get("Tx_role")}
+You as #{rel.get("Rx_role")} and
+#{ent:names.get([Id,"Tx_name"])} as #{rel.get("Tx_role")}
 #{canAccept => <<<a href="#{meta:host}/sky/event/#{Rx}/accept-inbound/wrangler/pending_subscription_approval?Id=#{rel.get("Id")}">accept</a> >> | ""}
 #{canDelete => del_link | ""}
 </li>
