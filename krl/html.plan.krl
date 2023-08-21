@@ -7,6 +7,11 @@ ruleset html.plan {
   global {
     pico_logo = "https://raw.githubusercontent.com/Picolab/PLAN/main/docs/pico-logo-transparent-48x48.png"
     user_circle_svg = "https://raw.githubusercontent.com/Picolab/fully-sharded-database/main/images/user-circle-o-white.svg"
+    app_url = function(app_tag,app_rid,app_page){
+      app_tags = ["app"].append(app_tag)
+      eci = wrangler:channels(app_tags).reverse().head().get("id")
+      eci => <<#{meta:host}/c/#{eci}/query/#{app_rid}/#{app_page}>> | null
+    }
     header = function(title,scripts,_headers) {
       the_cookies = cookies(_headers)
       self_tags = ["self","system"]
@@ -128,12 +133,9 @@ body {
   rule redirectHome {
     select when client secret_expired
     pre {
-      app_tags = ["app","applications"]
-      eci = wrangler:channels(app_tags).reverse().head().get("id")
-      rid = "io.picolabs.plan.apps"
-      home_url = <<#{meta:host}/c/#{eci}/query/#{rid}/apps.html>>
+      landing_url = app_url("applications","io.picolabs.plan.apps","apps.html")
     }
-    if eci then send_directive("_redirect",{"url":home_url})
+    if landing_url then send_directive("_redirect",{"url":landing_url})
   }
   rule forgetAffiliate {
     select when io_picolabs_plan_apps affiliate_opts_out
