@@ -71,7 +71,7 @@ body {
       <span class="plan">Pico Labs Affiliate Network</span>
       </a>
       <img class="user-circle" src="#{user_circle_svg}">
-      <span class="username"#{sanity_mark}>#{pico_name}</span>
+      <span class="username"#{sanity_mark}>#{display_name}</span>
     </div>
     <div style="background-color:white;color:black;height:100%;border-radius:5px">
       <div id="section" style="min-height:100vh;margin-left:10px">
