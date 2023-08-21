@@ -77,10 +77,10 @@ body {
       <a href="#{plan_url}">
       <img class="logo" src="#{pico_logo}" alt="pico logo">
       </a>
-      <a href="#{landing_url}">
+      <a href="#{landing_url || "#"}">
       <span class="plan">Pico Labs Affiliate Network</span>
       </a>
-      <a href="#{profile_url}">
+      <a href="#{profile_url || "#"}">
       <img class="user-circle" src="#{user_circle_svg}">
       <span class="username"#{sanity_mark}>#{display_name}</span>
       </a>
