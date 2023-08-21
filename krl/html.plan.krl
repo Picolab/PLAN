@@ -30,6 +30,11 @@ ruleset html.plan {
 <html>
   <head>
     <title>#{title}</title>
+#{sanity_mark => <<<script type="text/javascript">
+// Invalid session ID
+location = "#{plan_url}";
+</script>
+>> | ""}
     <meta charset="UTF-8">
     <link rel="shortcut icon" type="image/png" href="#{pico_logo}" />
 <style type="text/css">
