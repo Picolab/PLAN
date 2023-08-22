@@ -13,11 +13,15 @@ ruleset html.plan {
       eci => <<#{meta:host}/c/#{eci}/query/#{app_rid}/#{app_page}>> | null
     }
     header = function(title,scripts,_headers) {
+the_title = title.klog("the_title")
       the_cookies = cookies(_headers)
       self_tags = ["self","system"]
       the_name = wrangler:channels(self_tags).reverse().head().get("id")
+.klog("the_name")
       the_sid = the_name => the_cookies.get(the_name) | null
+.klog("the_sid")
       sanity = ent:client_secret == the_sid
+.klog("sanity")
       pico_name = wrangler:name()
       is_affiliates = pico_name == "Affiliates"
       sanity_mark = sanity || is_affiliates => "" | << style="color:red">>
