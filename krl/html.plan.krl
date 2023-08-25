@@ -5,6 +5,13 @@ ruleset html.plan {
     provides header, footer, cookies
   }
   global {
+    session_valid = function(_headers){
+      the_cookies = cookies(_headers)
+      self_tags = ["self","system"]
+      the_name = wrangler:channels(self_tags).reverse().head().get("id")
+      the_sid = the_name => the_cookies.get(the_name) | null
+      ent:client_secret == the_sid
+    }
     pico_logo = "https://raw.githubusercontent.com/Picolab/PLAN/main/docs/pico-logo-transparent-48x48.png"
     user_circle_svg = "https://raw.githubusercontent.com/Picolab/fully-sharded-database/main/images/user-circle-o-white.svg"
     app_url = function(app_tag,app_rid,app_page){
@@ -13,11 +20,7 @@ ruleset html.plan {
       eci => <<#{meta:host}/c/#{eci}/query/#{app_rid}/#{app_page}>> | null
     }
     header = function(title,scripts,_headers) {
-      the_cookies = cookies(_headers)
-      self_tags = ["self","system"]
-      the_name = wrangler:channels(self_tags).reverse().head().get("id")
-      the_sid = the_name => the_cookies.get(the_name) | null
-      sanity = ent:client_secret == the_sid
+      sanity = session_valid(_headers)
       pico_name = wrangler:name()
       is_affiliates = pico_name == "Affiliates"
       sanity_mark = sanity || is_affiliates => "" | << style="color:red">>
