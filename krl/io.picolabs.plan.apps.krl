@@ -32,9 +32,15 @@ ruleset io.picolabs.plan.apps {
       event_url(meta:rid,"ready_to_login","login")
     }
     html_page = function(title,head,body,_headers){
-      html:header(title,head,_headers)
-      + body
-      + html:footer()
+      html:session_valid(_headers) => (
+        html:header(title,head,_headers)
+        + body
+        + html:footer()
+      ) | (
+        html:header("login",,_headers)
+        + <<<a href="/plan.html">Login</a> >>
+        + html:footer()
+      )
     }
     app_list = function(){
       ent:apps.keys()
