@@ -37,7 +37,7 @@ ruleset io.picolabs.plan.apps {
         + body
         + html:footer()
       ) | (
-        html:header("login",,_headers)
+        html:header("login","",_headers)
         + <<<a href="/plan.html">Login</a> >>
         + html:footer()
       )
