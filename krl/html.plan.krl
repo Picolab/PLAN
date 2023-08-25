@@ -2,7 +2,7 @@ ruleset html.plan {
   meta {
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.pds alias pds
-    provides header, footer, cookies
+    provides header, footer, cookies, session_valid
   }
   global {
     session_valid = function(_headers){
@@ -26,7 +26,7 @@ ruleset html.plan {
       sanity_mark = sanity || is_affiliates => "" | << style="color:red">>
       display_name = is_affiliates => pico_name |
         pds:getData(["profile","Your name"]) || pico_name
-      plan_url = "/plan.html"
+      plan_url = "https://picolab.github.io/PLAN/"
       landing_url = app_url("applications","io.picolabs.plan.apps","apps.html")
       profile_url = app_url("contact-information","io.picolabs.plan.profile","profile.html")
       <<<!DOCTYPE HTML>
