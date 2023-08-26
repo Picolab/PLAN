@@ -41,6 +41,7 @@ ruleset io.picolabs.plan.directory {
   a[disabled] {
     pointer-events: none;
     text-decoration: none;
+    color: inherit;
   }
 </style>
 >>
