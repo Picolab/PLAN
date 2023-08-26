@@ -23,7 +23,11 @@ ruleset io.picolabs.plan.directory {
         + "?wellKnown_Tx=" + eci
       }
       join_link = function(s){
-        <<<a href="#{join_url(s)}">join</a> >>
+        inactive = profile:data().get("name").isnull()
+                   || s.get("name") == "Bazaar of Applications"
+        msg = "Set your profile name before joining"
+        disabled = inactive => << disabled title="#{msg}">> | ""
+        <<<a href="#{join_url(s)}"#{disabled}>join</a> >>
       }
       leave_link = function(s){
         leave_url = join_url(s)
@@ -33,8 +37,17 @@ ruleset io.picolabs.plan.directory {
       roster_link = function(s){
         <<<a href="roster.html">roster</a> >>
       }
-      app:html_page("Manage Directories", "",
-<<
+      styles = <<<style type="text/css">
+  a[disabled] {
+    pointer-events: none;
+    text-decoration: none;
+  }
+</style>
+>>
+      app:html_page(
+        "Manage Directories",
+        styles,
+        <<
 <h1>Manage Directories</h1>
 <table>
 <tr>
@@ -55,7 +68,8 @@ ruleset io.picolabs.plan.directory {
 <td>#{is_member => roster_link(s) | "&nbsp;"}</td>
 </tr>
 >>}).join("")}</table>
->>, _headers)
+>>,
+        _headers)
     }
     roster = function(_headers){
       agg_eci = subs:established("Rx_role","affiliate").head().get("Tx")
