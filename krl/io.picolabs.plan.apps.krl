@@ -287,9 +287,20 @@ input.wide90 {
   }
   rule forgetAffiliate {
     select when io_picolabs_plan_apps affiliate_opts_out
-    send_directive("_redirect",{"url":meta:host})
-    fired {
-      raise wrangler event "ready_for_deletion"
+    pre {
+      parent_eci = wrangler:parent_eci()
+      child_tags = ["system","child"]
+      my_eci = wrangler:channels(child_tags).head().get("id")
+      my_name = wrangler:name()
+    }
+    every {
+      event:send({
+        "eci":parent_eci,
+        "domain":"io_picolabs_plan_affiliates",
+        "type":"affiliate_opts_out",
+        "attrs":{"eci":my_eci,"name":my_name}
+      })
+      send_directive("_redirect",{"url":meta:host})
     }
   }
 }

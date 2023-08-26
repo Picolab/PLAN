@@ -259,4 +259,19 @@ When you see the page, you can bookmark it for future reference.
       raise ruleset event "rulesets_installed_for_affiliate" // terminal event
     }
   }
+  rule forgetAffiliate {
+    select when io_picolabs_plan_affiliates affiliate_opts_out
+      eci re#(.+)#
+      name re#(.+)#
+      setting(eci,name)
+    pre {
+      child = wrangler:children().filter(function(c){c.get("eci")==eci})
+      sanity = child.get("name") == name
+               && child.get("parent_eci") == meta:eci
+    }
+    if sanity then every {
+      event:send({"eci":eci,"domain":"wrangler","type":"rulesets_need_to_cleanup"})
+      event:send({"eci":eci,"domain":"wrangler","type":"ready_for_deletion"})
+    }
+  }
 }
