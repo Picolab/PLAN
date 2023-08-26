@@ -266,10 +266,13 @@ When you see the page, you can bookmark it for future reference.
       setting(eci,name)
     pre {
       child = wrangler:children().filter(function(c){c.get("eci")==eci})
+.klog("child")
       sanity = child.get("name") == name
+.klog("name")
                && child.get("parent_eci") == meta:eci
+.klog("meta eci")
     }
-    if sanity then every {
+    if sanity.klog("sanity") then every {
       event:send({"eci":eci,"domain":"wrangler","type":"rulesets_need_to_cleanup"})
       event:send({"eci":eci,"domain":"wrangler","type":"ready_for_deletion"})
     }
