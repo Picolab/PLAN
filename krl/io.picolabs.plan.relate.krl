@@ -9,14 +9,20 @@ ruleset io.picolabs.plan.relate {
   }
   global {
     wranglerRID = "io.picolabs.wrangler"
-    relEstablished = function(){
+    groomList = function(list){
       notBookkeepingRel = function(rel){
         rel.get("Rx_role") != "affiliate"
           || rel.get("Tx_role") != "affiliate list"
       }
-      subs:established()
+      names = function(Id){
+        ent:names.get(Id) || {}
+      }
+      list
         .filter(notBookkeepingRel)
-        .map(function(rel){rel.put(ent:names.get(rel.get("Id")))})
+        .map(function(rel){rel.put(names(rel.get("Id")))})
+    }
+    relEstablished = function(){
+      subs:established().groomList()
     }
     render = function(list,type,canDelete=true,canAccept=false){
       renderRel = function(rel){
@@ -67,9 +73,9 @@ You as #{rel.get("Rx_role")} and
 <h2>Relationships that are fully established</h2>
 #{render(relEstablished(),"estb")}
 <h2>Relationships that you have proposed</h2>
-#{render(subs:outbound(),"outb")}
+#{render(subs:outbound().groomList(),"outb")}
 <h2>Relationships that others have proposed</h2>
-#{render(subs:inbound(),"inbd",canAccept=true)}
+#{render(subs:inbound().groomList(),"inbd",canAccept=true)}
 >>, _headers)
     }
   }
