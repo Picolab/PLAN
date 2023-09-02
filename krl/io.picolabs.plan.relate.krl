@@ -4,16 +4,24 @@ ruleset io.picolabs.plan.relate.krl {
     use module io.picolabs.subscription alias subs
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.plan.apps alias app
+    provides relEstablished
     shares relate
   }
   global {
     wranglerRID = "io.picolabs.wrangler"
+    relEstablished = function(){
+      notBookkeepingRel = function(rel){
+        rel.get("Rx_role") != "affiliate"
+          || rel.get("Tx_role") != "affiliate list"
+      }
+      subs:established()
+        .filter(notBookkeepingRel)
+        .map(function(rel){rel.put(ent:names.get(rel.get("Id")))})
+    }
     render = function(list,type,canDelete=true,canAccept=false){
       renderRel = function(rel){
         Rx = rel.get("Rx")
         Id = rel.get("Id")
-        hideBookkeepingRel = rel.get("Rx_role") == "affiliate"
-          && rel.get("Tx_role") == "affiliate list"
         dmap = {
           "outb":{"eid":"cancel-outbound",
                   "type":"outbound_cancellation",
@@ -37,10 +45,9 @@ ruleset io.picolabs.plan.relate.krl {
           dmap{[type,"text"]}} this relationship #{
           dmap{[type,"msg"]}}. This cannot be undone.')">#{
           dmap{[type,"text"]}}</a> >>
-        hideBookkeepingRel => "" |
         <<<li><span style="display:none">#{rel.encode()}</span>
 You as #{rel.get("Rx_role")} and
-#{ent:names.get([Id,"Tx_name"])} as #{rel.get("Tx_role")}
+#{rel.get("Tx_name")} as #{rel.get("Tx_role")}
 #{canAccept => <<<a href="#{meta:host}/sky/event/#{Rx}/accept-inbound/wrangler/pending_subscription_approval?Id=#{rel.get("Id")}">accept</a> >> | ""}
 #{canDelete => del_link | ""}
 </li>
@@ -58,7 +65,7 @@ You as #{rel.get("Rx_role")} and
 <<
 <h1>Manage Relationships</h1>
 <h2>Relationships that are fully established</h2>
-#{render(subs:established(),"estb")}
+#{render(relEstablished(),"estb")}
 <h2>Relationships that you have proposed</h2>
 #{render(subs:outbound(),"outb")}
 <h2>Relationships that others have proposed</h2>
@@ -136,7 +143,6 @@ You as #{rel.get("Rx_role")} and
         "Rx_name": event:attrs.get("Tx_name"), //change perspective
         "Tx_name": event:attrs.get("Rx_name"), //change perspective
       }
-.klog("names")
     }
     fired {
       ent:names{Id} := names
