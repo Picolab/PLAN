@@ -1,4 +1,4 @@
-ruleset io.picolabs.plan.relate.krl {
+ruleset io.picolabs.plan.relate {
   meta {
     name "Relationships"
     use module io.picolabs.subscription alias subs
