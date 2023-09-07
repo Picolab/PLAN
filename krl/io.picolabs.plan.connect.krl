@@ -34,7 +34,9 @@ ruleset io.picolabs.plan.connect {
 #{did_map.keys().map(function(k){
 <<<li>#{k.elide()} : #{did_map.get(k).elide()}</li>
 >>}).join("")}</ul>
-<h2>DIDDocs</h2>
+<h2>Technical</h2>
+<h3>DIDDocs</h3>
+<p>For this pico, there may be DIDDocs for used (or unused) invitations.</p>
 <ul>
 #{did_docs.keys().map(function(k){
 <<<li title="#{k}"><a href="diddoc.html?did=#{k}">#{k.elide()}</a> #{extract_eci(did_docs.get(k))}</li>
