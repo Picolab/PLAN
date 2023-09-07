@@ -2,6 +2,7 @@ ruleset oob {
   meta {
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.did-o alias dcv2
+    provides generate_invitation
     shares generate_invitation, invite
   }
   global {
