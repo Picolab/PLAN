@@ -5,16 +5,12 @@ ruleset io.picolabs.plan.connect {
     use module io.picolabs.plan.relate alias rel
     use module io.picolabs.plan.apps alias app
     use module io.picolabs.did-o alias dcv2
+    use module oob
     shares connect, external, invitation, diddoc
   }
   global {
     invitation = function(label){
-      dcv2:generate_invitation(label)
-    }
-    displayNameLI = function(s){
-      <<<li>You as <em>#{s.get("Rx_role")}</em> with #{s.get("Tx_name")} as <em>#{s.get("Tx_role")}</em>
-</li>
->>
+      oob:generate_invitation(label)
     }
     connect = function(_headers){
       did_docs = dcv2:didDocs()
