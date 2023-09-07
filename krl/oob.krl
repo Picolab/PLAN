@@ -7,8 +7,9 @@ ruleset oob {
   }
   global {
     generate_invitation = function(label){
+      eci = wrangler:channels(["oob","ui"]).head().get("id")
       parts = dcv2:generate_invitation(label).split("/invite?")
-      <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/invite.html?#{parts[1]}>>
+      <<#{meta:host}/c/#{eci}/query/#{meta:rid}/invite.html?#{parts[1]}>>
     }
     invite = function(_oob){
       json = _oob.math:base64decode().decode()
