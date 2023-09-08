@@ -4,6 +4,7 @@ ruleset io.picolabs.plan.connect {
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.plan.relate alias rel
     use module io.picolabs.plan.apps alias app
+    use module io.picolabs.plan.profile alias profile
     use module io.picolabs.did-o alias dcv2
     use module oob
     shares connect, external, invitation, diddoc
@@ -105,5 +106,14 @@ document.getElementById("diddoc").value
       connect_link = app:query_url(meta:rid,"connect.html")
     }
     send_directive("_redirect",{"url":connect_link})
+  }
+  rule initialize {
+    select when io_picolabs_plan_connect factory_reset
+    pre {
+      name = profile:data{"name"}
+    }
+    fired {
+      ent:agentLabel := name
+    }
   }
 }
