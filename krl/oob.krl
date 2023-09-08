@@ -36,6 +36,10 @@ $(function(){
 h1, h2, p, dt, dd {
   font-family: Arial, sanserif;
 }
+textarea {
+  min-height: 3em;
+  min-width: 30em;
+}
 </style>
   </head>
   <body>
