@@ -111,6 +111,7 @@ document.getElementById("diddoc").value
     select when io_picolabs_plan_connect factory_reset
     pre {
       name = profile:data{"name"}
+.klog("name")
     }
     fired {
       ent:agentLabel := name
