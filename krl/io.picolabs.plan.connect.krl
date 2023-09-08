@@ -110,8 +110,7 @@ document.getElementById("diddoc").value
   rule initializeAgentLabel {
     select when io_picolabs_plan_connect factory_reset
     pre {
-      name = profile:data.klog("data"){"name"}
-.klog("name")
+      name = profile:data(){"name"}
     }
     fired {
       ent:agentLabel := name
