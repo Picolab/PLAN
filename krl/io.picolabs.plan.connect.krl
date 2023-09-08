@@ -107,10 +107,10 @@ document.getElementById("diddoc").value
     }
     send_directive("_redirect",{"url":connect_link})
   }
-  rule initialize {
+  rule initializeAgentLabel {
     select when io_picolabs_plan_connect factory_reset
     pre {
-      name = profile:data{"name"}
+      name = profile:data.klog("data"){"name"}
 .klog("name")
     }
     fired {
