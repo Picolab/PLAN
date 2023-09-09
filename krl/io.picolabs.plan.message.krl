@@ -1,6 +1,7 @@
 ruleset io.picolabs.plan.message {
   meta {
     name "BasicMessages"
+    use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.plan.apps alias app
     use module io.picolabs.did-o alias dcv2
     use module didcomm-v2.basicmessage alias basicmessage
