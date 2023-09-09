@@ -5,7 +5,7 @@ ruleset io.picolabs.plan.profile {
     use module io.picolabs.pds alias pds
     use module io.picolabs.wrangler alias wrangler
     shares profile, name
-    provides data
+    provides data, name
   }
   global {
     cell_attrs = function(prompt){

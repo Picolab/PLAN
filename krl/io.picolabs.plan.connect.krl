@@ -33,7 +33,8 @@ ruleset io.picolabs.plan.connect {
 </form>
 <ul>
 #{did_map.keys().map(function(k){
-  //TODO name = wrangler:picoQuery(k,"io.picolabs.plan.profile","name",{})
+  fails_name = wrangler:picoQuery(k,"io.picolabs.plan.profile","name",{})
+.klog("fails_name") // TODO
   name = wrangler:picoQuery(k,"io.picolabs.wrangler","name",{}) // fallback
   title = name => << title="#{name}">> | ""
 <<<li><span#{title}>#{k.elide()}</span> : #{did_map.get(k).elide()}</li>
@@ -116,7 +117,7 @@ document.getElementById("diddoc").value
   rule initializeAgentLabel {
     select when io_picolabs_plan_connect factory_reset
     pre {
-      name = profile:data(){"name"}
+      name = profile:name()
     }
     fired {
       ent:agentLabel := name
