@@ -35,7 +35,10 @@ ruleset io.picolabs.plan.connect {
 #{did_map.keys().map(function(k){
   name = wrangler:picoQuery(k,"io.picolabs.plan.profile","name",{})
   title = name => << title="#{name}">> | ""
-<<<li><span#{title}>#{k.elide()}</span> : #{did_map.get(k).elide()}</li>
+  <<<li>
+<span#{title}>#{k.elide()}</span> : #{did_map.get(k).elide()}
+<a href="#{app:query_url("io.picolabs.plan.message","messages")}">messages</a>
+</li>
 >>}).join("")}</ul>
 <h2>Technical</h2>
 <h3>DIDDocs</h3>
