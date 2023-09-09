@@ -4,7 +4,7 @@ ruleset io.picolabs.plan.profile {
     use module io.picolabs.plan.apps alias app
     use module io.picolabs.pds alias pds
     use module io.picolabs.wrangler alias wrangler
-    shares profile
+    shares profile, name
     provides data
   }
   global {
@@ -99,6 +99,9 @@ You may edit your information: click, change, and press Enter key (or Esc to und
           k = n.second_word()
           a.put(k,pds:getData("profile",n))
         },{})
+    }
+    name = function(){
+      pds:getData("profile",element_names[1])
     }
   }
   rule initializeProfile {
