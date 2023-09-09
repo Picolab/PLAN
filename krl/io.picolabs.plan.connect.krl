@@ -43,7 +43,7 @@ ruleset io.picolabs.plan.connect {
 >>}).join("")}</ul>
 <h2>Technical</h2>
 <h3>DIDDocs</h3>
-<p>For this pico, there may be DIDDocs for used (or unused) invitations.</p>
+<p>For this pico, there may be extra DIDDocs for unused invitations.</p>
 <ul>
 #{did_docs.keys().map(function(k){
 <<<li title="#{k}"><a href="diddoc.html?did=#{k}">#{k.elide()}</a> #{which_pico(did_docs.get(k))}</li>
