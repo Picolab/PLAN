@@ -36,12 +36,7 @@ ruleset io.picolabs.plan.connect {
   name = wrangler:picoQuery(k,"io.picolabs.plan.profile","name",{})
 .klog("name")
   pico_name = wrangler:picoQuery(k,"io.picolabs.wrangler","name",{})
-.klog("pico_name")
-  eci = extract_eci(did_docs.get(k))
-.klog("eci")
-  name_via_eci = wrangler:picoQuery(eci,"io.picolabs.plan.profile","name",{})
-.klog("name_via_eci")
-  title = name_via_eci => << title="#{name_via_eci}">> | ""
+  title = pico_name => << title="#{pico_name}">> | ""
 <<<li#{title}>#{k.elide()} : #{did_map.get(k).elide()}</li>
 >>}).join("")}</ul>
 <h2>Technical</h2>
