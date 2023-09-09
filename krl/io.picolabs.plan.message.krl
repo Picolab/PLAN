@@ -9,13 +9,26 @@ ruleset io.picolabs.plan.message {
   }
   global {
     message = function(did,_headers){
+      bmTags = ["didcomm-v2","basicmessage"]
+      bmECI = wrangler:channels(bmTags).head().get("id")
       name = wrangler:picoQuery(did,"io.picolabs.plan.profile","name",{})
+      label = name => << a connection you have with #{name}>> | ""
+      action_link = <<#{meta:host}/sky/event/#{bmECI}/none/didcomm_v2_basicmessage/message_to_send>>
       app:html_page("BasicMessages", "",
 <<
 <h1>BasicMessages</h1>
-<h2>For DID #{did.elide()}</h2>
-#{name => <<<p>Over connection you have with #{name}.</p>
->> | ""}
+<h2>For DID #{did.elide() + label}</h2>
+<div id="messaging">
+<div id="messages">
+</div>
+<div id="send_message">
+<form action="#{action_link}">
+<input type="hidden" name="their_did" value="#{did}">
+<input id="message_composition" name="message_text">
+<button type="submit">Send ▷</button>
+</form>
+</div>
+</div>
 >>, _headers)
     }
     elide = function(did){
