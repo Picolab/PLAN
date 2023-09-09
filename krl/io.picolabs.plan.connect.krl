@@ -34,6 +34,9 @@ ruleset io.picolabs.plan.connect {
 <ul>
 #{did_map.keys().map(function(k){
   name = wrangler:picoQuery(k,"io.picolabs.plan.profile","name",{})
+.klog("name")
+  pico_name = wrangler:picoQuery(k,"io.picolabs.wrangler","name",{})
+.klog("pico_name")
   title = name => << title="#{name}">> | ""
 <<<li#{title}>#{k.elide()} : #{did_map.get(k).elide()}</li>
 >>}).join("")}</ul>
