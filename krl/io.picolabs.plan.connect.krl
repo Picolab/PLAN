@@ -37,7 +37,11 @@ ruleset io.picolabs.plan.connect {
 .klog("name")
   pico_name = wrangler:picoQuery(k,"io.picolabs.wrangler","name",{})
 .klog("pico_name")
-  title = name => << title="#{name}">> | ""
+  eci = extract_eci(did_docs.get(k))
+.klog("eci")
+  name_via_eci = wrangler:picoQuery(eci,"io.picolabs.plan.profile","name",{})
+.klog("name_via_eci")
+  title = name_via_eci => << title="#{name_via_eci}">> | ""
 <<<li#{title}>#{k.elide()} : #{did_map.get(k).elide()}</li>
 >>}).join("")}</ul>
 <h2>Technical</h2>
@@ -45,7 +49,7 @@ ruleset io.picolabs.plan.connect {
 <p>For this pico, there may be DIDDocs for used (or unused) invitations.</p>
 <ul>
 #{did_docs.keys().map(function(k){
-<<<li title="#{k}"><a href="diddoc.html?did=#{k}">#{k.elide()}</a> #{extract_eci(did_docs.get(k))}</li>
+<<<li title="#{k}"><a href="diddoc.html?did=#{k}">#{k.elide()}</a> #{which_pico(did_docs.get(k))}</li>
 >>}).join("")}</ul>
 >>, _headers)
     }
@@ -92,7 +96,10 @@ document.getElementById("diddoc").value
     extract_eci = function(did_doc){
       urls = did_doc.get("service").map(function(sm){sm.get(["serviceEndpoint","uri"])})
       ecis = urls.map(function(u){u.extract(re#/event/([^/]*)/none/#).head()})
-      eci = ecis.head()
+      ecis.head()
+    }
+    which_pico = function(did_doc){
+      eci = extract_eci(did_doc)
       ctx:channels.any(function(c){c{"id"}==eci}) => "this pico" | "another pico"
     }
   }
