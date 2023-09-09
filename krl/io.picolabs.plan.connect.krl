@@ -33,9 +33,7 @@ ruleset io.picolabs.plan.connect {
 </form>
 <ul>
 #{did_map.keys().map(function(k){
-  fails_name = wrangler:picoQuery(k,"io.picolabs.plan.profile","name",{})
-.klog("fails_name") // TODO
-  name = wrangler:picoQuery(k,"io.picolabs.wrangler","name",{}) // fallback
+  name = wrangler:picoQuery(k,"io.picolabs.plan.profile","name",{})
   title = name => << title="#{name}">> | ""
 <<<li><span#{title}>#{k.elide()}</span> : #{did_map.get(k).elide()}</li>
 >>}).join("")}</ul>
