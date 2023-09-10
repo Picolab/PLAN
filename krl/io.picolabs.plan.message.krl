@@ -53,7 +53,7 @@ ruleset io.picolabs.plan.message {
 </style>
 >>,
         <<<h1>BasicMessages</h1>
-<h2>For DID #{did.elide() + label}</h2>
+<h2><img src="https://manifold.picolabs.io/static/media/Aries.ffeeb7fd.png" alt="Aries logo" style="height:30px" >For DID #{did.elide() + label}</h2>
 <div id="messaging">
 <div id="messages">
 #{ent:messages{did}.defaultsTo([]).map(function(m){
