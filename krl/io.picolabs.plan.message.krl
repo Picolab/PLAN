@@ -24,6 +24,9 @@ ruleset io.picolabs.plan.message {
 <div id="messaging">
 <div id="messages">
 <p>Number of messages: #{ent:messages{did}.defaultsTo([]).length()}</p>
+#{ent:messages{did}.defaultsTo([]).map(function(m){
+  <<<pre>#{m.encode()}</pre>
+>>}).join("")}
 </div>
 <div id="send_message">
 <form action="#{action_link}">
