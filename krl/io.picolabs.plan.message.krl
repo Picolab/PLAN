@@ -9,6 +9,9 @@ ruleset io.picolabs.plan.message {
   }
   global {
     message = function(did,_headers){
+      did => messages(did,_headers) | dids(_headers)
+    }
+    messages = function(did,_headers){
       bmTags = ["didcomm-v2","basicmessage"]
       bmECI = wrangler:channels(bmTags).head().get("id")
       name = wrangler:picoQuery(did,"io.picolabs.plan.profile","name",{})
@@ -29,6 +32,17 @@ ruleset io.picolabs.plan.message {
 </form>
 </div>
 </div>
+>>, _headers)
+    }
+    dids = function(_headers){
+      connect_link = app:query_url("io.picolabs.plan.connect","connect.html")
+      app:html_page("BasicMessages", "",
+<<
+<h1>BasicMessages</h1>
+<p>
+Please select a DID for one of your
+<a href="#{connect_link}">connections</a>.
+</p>
 >>, _headers)
     }
     elide = function(did){
