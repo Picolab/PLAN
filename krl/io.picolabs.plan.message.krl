@@ -17,30 +17,9 @@ ruleset io.picolabs.plan.message {
       name = wrangler:picoQuery(did,"io.picolabs.plan.profile","name",{})
       label = name => << a connection you have with #{name}>> | ""
       action_link = <<#{meta:host}/sky/event/#{bmECI}/none/didcomm_v2_basicmessage/message_to_send>>
-      app:html_page("BasicMessages", styles,
-<<
-<h1>BasicMessages</h1>
-<h2>For DID #{did.elide() + label}</h2>
-<div id="messaging">
-<div id="messages">
-<p>Number of messages: #{ent:messages{did}.defaultsTo([]).length()}</p>
-#{ent:messages{did}.defaultsTo([]).map(function(m){
-  msg_time = time:add(m.get("created_time"),{"hours": -6})
-    .replace(re#.000Z#," MDT").replace("T"," ")
-  <<<p class="#{m.get("from")}" title="#{msg_time}">#{m.get("message_text")}</p>
->>}).join("")}
-</div>
-<div id="send_message">
-<form action="#{action_link}">
-<input type="hidden" name="their_did" value="#{did}">
-<input id="message_composition" name="message_text">
-<button type="submit">Send ▷</button>
-</form>
-</div>
-</div>
->>, _headers)
-    }
-    styles = <<<style type="text/css">
+      app:html_page(
+        "BasicMessages",
+        <<<style type="text/css">
 #messaging {
   max-height: 60vh;
   width: 30%;
@@ -72,7 +51,28 @@ ruleset io.picolabs.plan.message {
   margin: 5px 0 0 0;
 }
 </style>
->>
+>>,
+        <<<h1>BasicMessages</h1>
+<h2>For DID #{did.elide() + label}</h2>
+<div id="messaging">
+<div id="messages">
+#{ent:messages{did}.defaultsTo([]).map(function(m){
+  msg_time = time:add(m.get("created_time"),{"hours": -6})
+    .replace(re#.000Z#," MDT").replace("T"," ")
+  <<<p class="#{m.get("from")}" title="#{msg_time}">#{m.get("message_text")}</p>
+>>}).join("")}
+</div>
+<div id="send_message">
+<form action="#{action_link}">
+<input type="hidden" name="their_did" value="#{did}">
+<input id="message_composition" name="message_text">
+<button type="submit">Send ▷</button>
+</form>
+</div>
+</div>
+>>,
+        _headers)
+    }
     dids = function(_headers) {
       connect_link = app:query_url("io.picolabs.plan.connect","connect.html")
       app:html_page("BasicMessages", "",
