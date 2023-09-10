@@ -65,7 +65,7 @@ ruleset io.picolabs.plan.message {
 <div id="send_message">
 <form action="#{action_link}">
 <input type="hidden" name="their_did" value="#{did}">
-<input id="message_composition" name="message_text">
+<input id="message_composition" name="message_text" autofocus>
 <button type="submit">Send ▷</button>
 </form>
 </div>
