@@ -25,7 +25,9 @@ ruleset io.picolabs.plan.message {
 <div id="messages">
 <p>Number of messages: #{ent:messages{did}.defaultsTo([]).length()}</p>
 #{ent:messages{did}.defaultsTo([]).map(function(m){
-  <<<pre>#{m.encode()}</pre>
+  msg_time = time:add(m.get("created_time"),{"hours": -6})
+    .replace(re#.000Z#," MDT").replace("T"," ")
+  <<<p class="#{m.get("from")}" title="#{msg_time}">#{m.get("message_text")}</p>
 >>}).join("")}
 </div>
 <div id="send_message">
