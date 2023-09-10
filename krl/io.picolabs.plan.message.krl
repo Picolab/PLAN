@@ -23,6 +23,7 @@ ruleset io.picolabs.plan.message {
 <h2>For DID #{did.elide() + label}</h2>
 <div id="messaging">
 <div id="messages">
+<p>Number of messages: #{ent:messages{did}.defaultsTo([]).length()}</p>
 </div>
 <div id="send_message">
 <form action="#{action_link}">
@@ -48,6 +49,47 @@ Please select a DID for one of your
     elide = function(did){
       did.length() < 30 => did
                          | did.substr(0,25) + "…"
+    }
+  }
+  rule initializeOnInstallation {
+    select when io_picolabs_plan_message factory_reset
+      where ent:messages.isnull()
+    fired {
+      ent:messages := {}
+    }
+  }
+  rule incomingMessge {
+    select when didcomm_v2_basicmessage message_received
+    pre {
+      message = event:attrs{"message"}
+      their_did = message{"from"}
+      msg = {
+        "their_did": their_did,
+        "message_text": message{["body","content"]},
+        "created_time": time:new(message{"created_time"}*1000),
+        "from": "incoming",
+      }
+      old_messages = ent:messages{their_did}.defaultsTo([])
+    }
+    fired {
+      ent:messages{their_did} := old_messages.append(msg)
+    }
+  }
+  rule outgoingMessge {
+    select when didcomm_v2_basicmessage message_sent
+    pre {
+      message = event:attrs{"message"}
+      their_did = message{"to"}.head()
+      msg = {
+        "their_did": their_did,
+        "message_text": message{["body","content"]},
+        "created_time": time:new(message{"created_time"}*1000),
+        "from": "outgoing",
+      }
+      old_messages = ent:messages{their_did}.defaultsTo([])
+    }
+    fired {
+      ent:messages{their_did} := old_messages.append(msg)
     }
   }
 }
