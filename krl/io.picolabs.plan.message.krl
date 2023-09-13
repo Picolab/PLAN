@@ -5,7 +5,7 @@ ruleset io.picolabs.plan.message {
     use module io.picolabs.plan.apps alias app
     use module io.picolabs.did-o alias dcv2
     use module didcomm-v2.basicmessage alias basicmessage
-    shares message
+    shares message, messages
   }
   global {
     message = function(did,_headers) {
