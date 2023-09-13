@@ -2,7 +2,7 @@ ruleset io.picolabs.plan.Manifold {
   meta {
     name "Manifold things"
     use module io.picolabs.plan.apps alias app
-    shares things, thing
+    shares things, thing, setup
   }
   global {
     things = function(_headers){
@@ -16,6 +16,10 @@ ruleset io.picolabs.plan.Manifold {
     things_list = function(_headers){
       app:html_page("Manifold things", "",
 <<
+<h1
+  style="float:right;cursor:pointer"
+  title="Setup"
+  onclick="location='setup.html'">⚙</h1>
 <h1>Manifold things</h1>
 <ul>
 #{
