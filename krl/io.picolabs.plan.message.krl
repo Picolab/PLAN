@@ -125,7 +125,9 @@ Please select a DID for one of your
         "from": "outgoing",
       }
       old_messages = ent:messages{their_did}.defaultsTo([])
+      page_link = app:query_url(meta:rid,"messages.html")+"?did="+their_did
     }
+    send_directive("_redirect",{"url":page_link})
     fired {
       ent:messages{their_did} := old_messages.append(msg)
     }
