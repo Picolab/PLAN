@@ -6,7 +6,7 @@ ruleset io.picolabs.plan.connect {
     use module io.picolabs.plan.apps alias app
     use module io.picolabs.plan.profile alias profile
     use module io.picolabs.did-o alias dcv2
-    use module oob
+    use module didcomm-v2.out-of-band alias oob
     shares connect, external, invitation, diddoc
   }
   global {
