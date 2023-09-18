@@ -90,6 +90,11 @@ You may edit your information: click, change, and press Enter key (or Esc to und
         }
       }
     </script>
+    <style type="text/css">
+      td[contenteditable="true"]:hover {
+        outline: 1px solid black;
+      }
+    </style>
 >>
     }
     data = function(){
