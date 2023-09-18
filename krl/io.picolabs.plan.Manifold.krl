@@ -60,6 +60,10 @@ ruleset io.picolabs.plan.Manifold {
       the_thing = ent:things_list.values()
         .filter(function(v){v.get("Tx") == eci}).head()
       the_thing_name = the_thing.get("name")
+      the_thing_picoId = http:get(Mq+eci+"/io.picolabs.wrangler/myself")
+        .get("content")
+        .decode()
+        .get("id")
       app:html_page(the_thing_name,"",
 <<
 <h1>#{the_thing_name}</h1>
@@ -86,7 +90,7 @@ ruleset io.picolabs.plan.Manifold {
 }</dl>
 <h3>Manifold page</h3>
 <p>Assuming you are logged in to Manifold.</p>
-<pre>https://manifold.picolabs.io/#/mythings/#{the_thing.get("picoId")}</pre>
+<pre>https://manifold.picolabs.io/#/mythings/#{the_thing_picoId}</pre>
 >>, _headers)
     }
   }
