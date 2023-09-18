@@ -84,6 +84,9 @@ ruleset io.picolabs.plan.Manifold {
 >>
   }).values().join("")
 }</dl>
+<h3>Manifold page</h3>
+<p>Assuming you are logged in to Manifold.</p>
+<pre>https://manifold.picolabs.io/#/mythings/#{the_thing.get("picoId")}</pre>
 >>, _headers)
     }
   }
