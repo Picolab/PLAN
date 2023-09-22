@@ -13,6 +13,11 @@ ruleset io.picolabs.plan.Manifold {
       p = port || ent:port
       "https://" + h + (p => ":" + p | "") + "/sky/cloud/"
     }
+    Me = function(eci,eid="none"){
+      h = ent:host
+      p = ent:port
+      "https://" + h + (p => ":" + p | "") + "/sky/event/" + eci + "/" + eid + "/"
+    }
     things_list = function(_headers){
       app:html_page("Manifold things", "",
 <<
@@ -48,6 +53,13 @@ ruleset io.picolabs.plan.Manifold {
 >>, _headers)
     }
     thing = function(eci,_headers){
+      apps = http:get(Me(eci)+"manifold/apps")
+        .get("content")
+        .decode()
+        .get("directives")
+        .filter(function(d){d{"name"}=="app discovered..."})
+        .collect(function(a){a.get(["options","app","name"])})
+        .map(function(o){o.head().get("options")})
       safeandmine_query = function(name){
         Mq()+eci+"/io.picolabs.safeandmine/"+name
       }
@@ -61,9 +73,34 @@ ruleset io.picolabs.plan.Manifold {
         .filter(function(v){v.get("Tx") == eci}).head()
       the_thing_name = the_thing.get("name")
       the_thing_picoId = the_thing.get("picoId")
+      app_list = app:app_list()
       app:html_page(the_thing_name,"",
 <<
 <h1>#{the_thing_name}</h1>
+<h2>Manifold apps</h2>
+<ul style="list-style-type:none">
+#{apps.map(
+  function(v,k){
+    deprecated = k.match(re# agent$#i)
+    known = k.match(re#safeandmine|journal#)
+    planRID = v.get("rid").replace("io.picolabs.","io.picolabs.plan.M-")
+    have_app = app_list >< planRID
+    plan_title = have_app => "" | << title="#{"need app " + planRID}">>
+    plan_link = have_app => app:query_url(planRID,k+".html?eci="+eci) | "#"
+    app_link = known && have_app => <<<a href="#{plan_link}">#{k}</a\>>> | k
+    styles = [
+      "width:25px",
+      "border-radius:5px",
+      "vertical-align:middle",
+      "margin:5px 0",
+    ]
+    <<<li>
+<img src="#{v.get("iconURL")}" alt="#{k} icon" style="#{styles.join(";")}">
+<span#{plan_title}>#{app_link}#{deprecated => " (deprecated)" | ""}</span>
+</li>
+>>
+  }
+).values().join("")}</ul>
 <h2>Safe and Mine</h2>
 <h3>Message</h3>
 <div style="border:1px solid silver;max-width:40vw;padding:0 10px">#{
