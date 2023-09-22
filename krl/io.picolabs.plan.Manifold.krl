@@ -3,6 +3,7 @@ ruleset io.picolabs.plan.Manifold {
     name "Manifold things"
     use module io.picolabs.plan.apps alias app
     shares things, thing, setup
+    provides Mq
   }
   global {
     things = function(_headers){
@@ -19,6 +20,7 @@ ruleset io.picolabs.plan.Manifold {
       "https://" + h + (p => ":" + p | "") + "/sky/event/" + eci + "/" + eid + "/"
     }
     things_list = function(_headers){
+      base_url = app:query_url(meta:rid,"thing.html")
       app:html_page("Manifold things", "",
 <<
 <h1
@@ -28,11 +30,14 @@ ruleset io.picolabs.plan.Manifold {
 <h1>Manifold things</h1>
 <ul>
 #{
-  ent:things_list.values().map(function(v,i){
-    base_url = app:query_url(meta:rid,"thing.html")
-    <<<li><a href="#{base_url}?eci=#{v.get("Tx")}">#{v.get("name")}</a></li>
+  ent:things_list
+      .values()
+      .map(function(v,i){
+        <<<li>
+<a href="#{base_url}?eci=#{v.get("Tx")}">#{v.get("name")}</a>
+</li>
 >>
-  }).join("")
+      }).join("")
 }</ul>
 >>, _headers)
     }
@@ -60,15 +65,6 @@ ruleset io.picolabs.plan.Manifold {
         .filter(function(d){d{"name"}=="app discovered..."})
         .collect(function(a){a.get(["options","app","name"])})
         .map(function(o){o.head().get("options")})
-      safeandmine_query = function(name){
-        Mq()+eci+"/io.picolabs.safeandmine/"+name
-      }
-      info = http:get(safeandmine_query("getInformation"))
-        .get("content")
-        .decode()
-      tags = http:get(safeandmine_query("getTags"))
-        .get("content")
-        .decode()
       the_thing = ent:things_list.values()
         .filter(function(v){v.get("Tx") == eci}).head()
       the_thing_name = the_thing.get("name")
@@ -101,27 +97,6 @@ ruleset io.picolabs.plan.Manifold {
 >>
   }
 ).values().join("")}</ul>
-<h2>Safe and Mine</h2>
-<h3>Message</h3>
-<div style="border:1px solid silver;max-width:40vw;padding:0 10px">#{
-  [["Owner","Phone","Email","Owner's Public Message"],
-  [
-    info.get("shareName") => info.get("name") | "",
-    info.get("sharePhone") => info.get("phone") | "",
-    info.get("shareEmail") => info.get("email") | "",
-    info.get("message"),
-  ]].pairwise(function(a,b){
-      b => <<<p><strong>#{a}:</strong> #{b}</p>
->> | ""
-    }).join("")
-}</div>
-<h3>Tags</h3>
-<dl>#{
-  tags.map(function(v,k){
-    <<<dt>#{k}</dt><dd>#{v.join(", ")}</dd>
->>
-  }).values().join("")
-}</dl>
 <h3>Manifold page</h3>
 <p>Assuming you are logged in to Manifold.</p>
 <pre>https://manifold.picolabs.io/#/mythings/#{the_thing_picoId}</pre>
