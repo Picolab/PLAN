@@ -88,6 +88,11 @@ ruleset io.picolabs.plan.Manifold {
 <h3>Manifold page</h3>
 <p>Assuming you are logged in to Manifold.</p>
 <pre>https://manifold.picolabs.io/#/mythings/#{the_thing_picoId}</pre>
+<h2>Technical</h2>
+<h3>Thing as known to Manifold</h3>
+<pre><script type="text/javascript">
+document.write(JSON.stringify(#{the_thing.encode()},null,2))
+</script></pre>
 >>, _headers)
     }
   }
