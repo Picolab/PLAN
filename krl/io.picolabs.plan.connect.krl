@@ -35,8 +35,8 @@ ruleset io.picolabs.plan.connect {
   oob:connections()
     .map(function(c,k){
         <<<pre>{
-  "label": #{c.get("label")}
-  "my_did": #{c.get("my_did").elide()}
+  "label": #{c.get("label")},
+  "my_did": #{c.get("my_did").elide()},
   "_oob": <textarea style="vertical-align:middle">#{c.get("_oob")}</textarea>
 }</pre>
 >>
