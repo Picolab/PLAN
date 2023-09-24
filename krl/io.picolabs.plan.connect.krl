@@ -26,7 +26,7 @@ ruleset io.picolabs.plan.connect {
 <ul>
 #{rel:relEstablished().map(function(r){
 <<<li>You as <em>#{r.get("Rx_role")}</em> with #{r.get("Tx_name")} as <em>#{r.get("Tx_role")}</em>
-<a href="#{inv_url}?label=#{r.get("Id")}">make connection</a>
+<a href="#{inv_url}?label=#{r.get("Id")}">make invitation</a>
 </li>
 >>
 }).join("")}</ul>
