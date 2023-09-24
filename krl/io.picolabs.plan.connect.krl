@@ -16,6 +16,8 @@ ruleset io.picolabs.plan.connect {
     connect = function(_headers){
       did_docs = dcv2:didDocs()
       did_map = dcv2:didMap()
+      inv_eci = wrangler:getChannels(["oob","ui"]).head().get("id")
+      inv_url = <<#{meta:host}/sky/event/#{inv_eci}/none/didcomm_v2_out_of_band/invitation_needed>>
       app:html_page("manage DIDComm v2 connections", "",
 <<
 <h1>Manage DIDComm v2 connections</h1>
@@ -24,7 +26,7 @@ ruleset io.picolabs.plan.connect {
 <ul>
 #{rel:relEstablished().map(function(r){
 <<<li>You as <em>#{r.get("Rx_role")}</em> with #{r.get("Tx_name")} as <em>#{r.get("Tx_role")}</em>
-<a href="##{r.get("Id")}">make connection</a>
+<a href="#{inv_url}?label=#{r.get("Id")}">make connection</a>
 </li>
 >>
 }).join("")}</ul>
@@ -47,7 +49,7 @@ ruleset io.picolabs.plan.connect {
 #{oob:connections.map(function(c,k){
     <<<li>#{k} <pre>c.encode()</pre></li>
 >>
-})}</ul>
+}).values()}</ul>
 <h2>Technical</h2>
 <h3>DIDDocs</h3>
 <p>For this pico, there may be extra DIDDocs for unused invitations.</p>
