@@ -50,7 +50,7 @@ ruleset io.picolabs.plan.connect {
   oob:connections
     .map(function(c,k){
         <<<li>#{k} <pre>c.encode()</pre></li>
-  >>
+>>
       })
     .values()
     .join("")
@@ -59,9 +59,18 @@ ruleset io.picolabs.plan.connect {
 <h3>DIDDocs</h3>
 <p>For this pico, there may be extra DIDDocs for unused invitations.</p>
 <ul>
-#{did_docs.keys().map(function(k){
-<<<li title="#{k}"><a href="diddoc.html?did=#{k}">#{k.elide()}</a> #{which_pico(did_docs.get(k))}</li>
->>}).join("")}</ul>
+#{
+  did_docs.keys()
+    .map(function(k){
+        used = did_map.keys() >< k || did_map.values() >< k
+        <<<li title="#{k}"><a href="diddoc.html?did=#{k}">#{k.elide()}</a> #{which_pico(did_docs.get(k))}
+#{used => "" | <<<a href="#del">del<a\>>>}
+</li>
+>>
+      }
+    )
+    .join("")
+}</ul>
 >>, _headers)
     }
     external = function(_headers){
