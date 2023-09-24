@@ -47,7 +47,7 @@ ruleset io.picolabs.plan.connect {
 <h3>Technical</h3>
 <ul>
 #{
-  oob:connections
+  oob:connections()
     .map(function(c,k){
         <<<li>#{k} <pre>c.encode()</pre></li>
 >>
