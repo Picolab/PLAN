@@ -30,7 +30,7 @@ ruleset io.picolabs.plan.connect {
 </li>
 >>
 }).join("")}</ul>
-<h3>Technical</h3>
+<h3>Unused invitations</h3>
 #{
   oob:connections()
     .map(function(c,k){
