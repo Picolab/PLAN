@@ -41,6 +41,12 @@ ruleset io.picolabs.plan.connect {
 <a href="#{message_link}?did=#{k}">messaging</a>
 </li>
 >>}).join("")}</ul>
+<h3>Technical</h3>
+<ul>
+#{oob:connections.map(function(c){
+    <<<li><pre>c.encode()</pre></li>
+>>
+})}</ul>
 <h2>Technical</h2>
 <h3>DIDDocs</h3>
 <p>For this pico, there may be extra DIDDocs for unused invitations.</p>
