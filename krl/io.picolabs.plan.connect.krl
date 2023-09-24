@@ -67,7 +67,7 @@ ruleset io.picolabs.plan.connect {
     .map(function(k){
         used = did_map.keys() >< k || did_map.values() >< k
         <<<li title="#{k}"><a href="diddoc.html?did=#{k}">#{k.elide()}</a> #{which_pico(did_docs.get(k))}
-#{used => "" | <<<a href="#del">del<a\>>>}
+#{used => "" | <<(unused)>>}
 </li>
 >>
       }
