@@ -37,7 +37,7 @@ ruleset io.picolabs.plan.connect {
         <<<pre>{
   "label": #{c.get("label")}
   "my_did": #{c.get("my_did").elide()}
-  "_oob": <textarea>#{c.get("_oob")}</textarea>
+  "_oob": <textarea style="vertical-align:middle">#{c.get("_oob")}</textarea>
 }</pre>
 >>
       })
