@@ -16,7 +16,7 @@ ruleset io.picolabs.plan.connect {
     connect = function(_headers){
       did_docs = dcv2:didDocs()
       did_map = dcv2:didMap()
-      inv_eci = wrangler:getChannels(["oob","ui"]).head().get("id")
+      inv_eci = wrangler:channels(["oob","ui"]).head().get("id")
       inv_url = <<#{meta:host}/sky/event/#{inv_eci}/none/didcomm_v2_out_of_band/invitation_needed>>
       app:html_page("manage DIDComm v2 connections", "",
 <<
