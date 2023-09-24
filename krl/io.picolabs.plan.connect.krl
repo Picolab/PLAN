@@ -24,6 +24,7 @@ ruleset io.picolabs.plan.connect {
 <ul>
 #{rel:relEstablished().map(function(r){
 <<<li>You as <em>#{r.get("Rx_role")}</em> with #{r.get("Tx_name")} as <em>#{r.get("Tx_role")}</em>
+<a href="##{r.get("Id")}">make connection</a>
 </li>
 >>
 }).join("")}</ul>
@@ -43,8 +44,8 @@ ruleset io.picolabs.plan.connect {
 >>}).join("")}</ul>
 <h3>Technical</h3>
 <ul>
-#{oob:connections.map(function(c){
-    <<<li><pre>c.encode()</pre></li>
+#{oob:connections.map(function(c,k){
+    <<<li>#{k} <pre>c.encode()</pre></li>
 >>
 })}</ul>
 <h2>Technical</h2>
