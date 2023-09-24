@@ -30,6 +30,20 @@ ruleset io.picolabs.plan.connect {
 </li>
 >>
 }).join("")}</ul>
+<h3>Technical</h3>
+#{
+  oob:connections()
+    .map(function(c,k){
+        <<{<br>
+  "label": #{c.get("label")}<br>
+  "my_did": #{c.get("my_did").elide()}<br>
+}<br>
+<textarea>#{c.get("_oob")}</textarea>
+>>
+      })
+    .values()
+    .join("")
+}
 <h2>External connections</h2>
 <form action="#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/external.html">
 <button type="submit">make new external connection</button>
@@ -44,16 +58,6 @@ ruleset io.picolabs.plan.connect {
 <a href="#{message_link}?did=#{k}">messaging</a>
 </li>
 >>}).join("")}</ul>
-<h3>Technical</h3>
-#{
-  oob:connections()
-    .map(function(c,k){
-        <<<pre>#{c.encode()}</pre>
->>
-      })
-    .values()
-    .join("")
-}
 <h2>Technical</h2>
 <h3>DIDDocs</h3>
 <p>For this pico, there may be extra DIDDocs for unused invitations.</p>
