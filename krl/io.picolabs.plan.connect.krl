@@ -16,8 +16,7 @@ ruleset io.picolabs.plan.connect {
     connect = function(_headers){
       did_docs = dcv2:didDocs()
       did_map = dcv2:didMap()
-      inv_eci = wrangler:channels(["oob","ui"]).head().get("id")
-      inv_url = <<#{meta:host}/sky/event/#{inv_eci}/none/didcomm_v2_out_of_band/invitation_needed>>
+      inv_link = app:event_url(meta:rid,"invitation_needed")
       app:html_page("manage DIDComm v2 connections", "",
 <<
 <h1>Manage DIDComm v2 connections</h1>
@@ -26,13 +25,13 @@ ruleset io.picolabs.plan.connect {
 <ul>
 #{rel:relEstablished().map(function(r){
 <<<li>You as <em>#{r.get("Rx_role")}</em> with #{r.get("Tx_name")} as <em>#{r.get("Tx_role")}</em>
-<a href="#{inv_url}?label=#{r.get("Id")}">make invitation</a>
+<a href="#{inv_link}?label=#{r.get("Id")}">make invitation</a>
 </li>
 >>
 }).join("")}</ul>
 <h3>Unused invitations</h3>
 #{
-  oob:connections()
+  ent:connections
     .map(function(c,k){
         <<<pre>{
   "label": #{c.get("label").encode()},
@@ -124,6 +123,32 @@ document.getElementById("diddoc").value
     which_pico = function(did_doc){
       eci = extract_eci(did_doc)
       ctx:channels.any(function(c){c{"id"}==eci}) => "this pico" | "another pico"
+    }
+  }
+  rule initialize {
+    select when io_picolabs_plan_connect factory_reset
+      where ent:connections.isnull()
+    fired {
+      ent:connections := oob:connections()
+    }
+  }
+  rule generateAndShowInvitation {
+    select when io_picolabs_plan_connect invitation_needed
+      label re#(.+)# setting(label)
+    pre {
+      the_invite = oob:generate_invitation(label)
+      parts = the_invite.split("/invite?_oob=")
+      _oob = parts.tail().split("&").head()
+      json = _oob.math:base64decode().decode()
+      the_connection_so_far = {
+        "label": label,
+        "my_did": json.get("from"),
+        "_oob": _oob,
+      }
+    }
+    send_directive("_redirect",{"url":the_invite})
+    fired {
+      ent:connections{label} := the_connection_so_far
     }
   }
   rule acceptInvitation {
