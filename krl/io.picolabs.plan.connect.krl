@@ -129,7 +129,7 @@ document.getElementById("diddoc").value
     select when io_picolabs_plan_connect factory_reset
       where ent:connections.isnull()
     fired {
-      ent:connections := oob:connections()
+      ent:connections := {}
     }
   }
   rule generateAndShowInvitation {
