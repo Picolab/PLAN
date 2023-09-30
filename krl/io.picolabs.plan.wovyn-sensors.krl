@@ -2,11 +2,61 @@ ruleset io.picolabs.plan.wovyn-sensors {
   meta {
     name "Wovyn sensors"
     use module io.picolabs.plan.apps alias app
-    shares wovyn_sensor, history, export_tsv, export_csv
-, export_raw
+    use module io.picolabs.wrangler alias wrangler
+    shares wovyn_sensor, history, settings,
+      export_tsv, export_csv, export_raw
     provides daysInRecord, export_csv
   }
   global {
+    settings_link = function(){
+      app:query_url(meta:rid,"settings.html")
+    }
+    settings = function(_headers){
+      hb_link = app:event_url(meta:rid,"heartbeat","hb")
+        .replace(meta:eci,ent:sensor_channel_id)
+      del_link = app:event_url(meta:rid,"sensor_not_needed")
+      add_link = app:event_url(meta:rid,"sensor_needed")
+      app:html_page("Wovyn sensor settings","",
+      <<
+<h1>Wovyn sensor settings</h1>
+<h2>Heartbeat input URL</h2>
+<pre>#{hb_link}</pre>
+<h2>Device mapping</h2>
+<form method="POST" action="#{add_link}">
+<table>
+<tr>
+<th>#</th>
+<th style="text-align:left">Name</th>
+<th style="text-align:left">Location</th>
+<th>Remove</th>
+</tr>
+#{
+  ent:mapping
+    .keys()
+    .map(
+      function(k,i){
+        v = ent:mapping{k}
+        <<<tr>
+<td>#{i+1}</td>
+<td>#{k}</td>
+<td>#{v}</td>
+<td><a href="#{del_link}?name=#{k}">del</a></td>
+</tr>
+>>
+      }
+    )
+    .values()
+    .join("")
+}<tr>
+<td></td>
+<td><input name="name"></td>
+<td><input name="location"</td>
+<td><button type="submit">Add</button></td>
+</tr>
+</table>
+</form>
+>>, _headers)
+    }
     daysInRecord = function(){ // finds all dates in the data
       firstHour = function(v,i){
         i%2==0
@@ -44,7 +94,8 @@ ruleset io.picolabs.plan.wovyn-sensors {
 >>)
     }
     wovyn_sensor = function(_headers){
-      one_sensor = function(v,k){
+      one_sensor = function(k){
+        v = ent:record.get(k)
         vlen = v.length()
         <<<h2 title="#{k}">#{ent:mapping{k}}</h2>
 <table>
@@ -58,10 +109,16 @@ ruleset io.picolabs.plan.wovyn-sensors {
 (#{vlen/2-1} more)
 >>
       }
-      app:html_page("manage Wovyn sensors","",
+      gear_styles = [
+        "float:right",
+        "text-decoration:none",
+        "margin:0.5em",
+      ]
+      app:html_page("Wovyn sensors","",
       <<
-<h1>Manage Wovyn sensors</h1>
-#{ent:record.map(one_sensor).values().join("")}
+<a style="#{gear_styles.join(";")}" href="#{settings_link()}">⚙️</a>
+<h1>Wovyn sensors</h1>
+#{ent:mapping.keys().map(one_sensor).join("")}
 <h2>Operations</h2>
 <h3>Export records</h3>
 <a href="export_csv.txt" target="_blank">export</a> (in new tab)
@@ -137,6 +194,18 @@ daysInRecord()
       ent:record{name}.klog("raw")
     }
   }
+  rule prepareChannel {
+    select when io_picolabs_plan_wovyn_sensors factory_reset
+      where ent:sensor_channel_id.isnull()
+    wrangler:createChannel(
+      ["input_from","wovyn_sensors"],
+      {"allow":[{"domain":"io_picolabs_plan_wovyn_sensors","name":"heartbeat"}],"deny":[]},
+      {"allow":[],"deny":[{"rid":"*","name":"*"}]}
+    ) setting(channel)
+    fired {
+      ent:sensor_channel_id := channel.get("id")
+    }
+  }
   rule prepare {
     select when io_picolabs_plan_wovyn_sensors factory_reset
       where ent:record.isnull()
@@ -148,6 +217,26 @@ daysInRecord()
         "Wovyn_163ECD": "Kitchen",
         "Wovyn_746ABF": "Porch",
       }
+    }
+  }
+  rule removeSensorMapping {
+    select when io_picolabs_plan_wovyn_sensors sensor_not_needed
+      name re#(Wovyn_[A-F0-9]{6})#
+      setting(name)
+    if ent:mapping.keys() >< name then
+      send_directive("_redirect",{"url":settings_link()})
+    fired {
+      clear ent:mapping{name}
+    }
+  }
+  rule addSensorMapping {
+    select when io_picolabs_plan_wovyn_sensors sensor_needed
+      name re#(Wovyn_[A-F0-9]{6})#
+      location re#(.+)#
+      setting(name,location)
+    send_directive("_redirect",{"url":settings_link()})
+    fired {
+      ent:mapping{name} := location
     }
   }
   rule acceptHeartbeat {
