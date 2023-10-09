@@ -125,8 +125,6 @@ input.wide90 {
 <p>You are now ready to login to your personal agent.</p>
 <form method="POST" action="#{apps_login_url()}">
 <input type="hidden" name="request_method" value="POST">
-<input type="checkbox" name="new_eci"> New ECI?
-<br>
 <button type="submit">Login</button>
 </form>
 >>
