@@ -58,17 +58,17 @@ ruleset io.picolabs.plan.wovyn-sensors {
 >>, _headers)
     }
     daysInRecord = function(){ // finds all dates in the data
-      firstHour = function(v,i){
+      earlyHour = function(v,i){ // sample one early hour in the day
         i%2==0
         &&
-        v.encode().decode().match(re#T06#) // assuming MDT
+        v.encode().decode().match(re#T07#) // one a.m. MDT / midnight MST
       }
       flatten = function(a,v){a.append(v)}
       justDate = function(t){t.split("T").head()}
       asSet = function(a,t){a.union(t)}
       ent:record
         .values()
-        .map(function(list){list.filter(firstHour)})
+        .map(function(list){list.filter(earlyHour)})
         .reduce(flatten,[])
         .map(justDate)
         .reduce(asSet,[])
@@ -129,8 +129,13 @@ ruleset io.picolabs.plan.wovyn-sensors {
   <option value="">Choose date</option>
 #{
 daysInRecord()
-  .map(function(d){ // assuming MDT
-    <<  <option value="#{d}T06">#{d}</option>
+  .map(function(d){
+    midnight = function(d){ // choose MDT or MST
+      d > "2023-11-05" => "T07" |
+      d > "2023-03-12" => "T06" |
+                          "T07"
+    }
+    <<  <option value="#{d}#{midnight(d)}">#{d}</option>
 >>})
   .join("")
 }</select>
