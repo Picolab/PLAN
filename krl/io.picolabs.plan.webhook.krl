@@ -90,7 +90,8 @@ td, th {
     pre {
       event_designation = event_domain + ":" + event_type
       webhook = ent:webhooks.get(event_designation)
-      eci = webhook.extract(re#/sky/event/([^/]*)/#).head()
+      eciRE = re#/sky/event/([^/]*)/#
+      eci = webhook.get("uri").extract(eciRE).head()
     }
     if eci then wrangler:deleteChannel(eci)
     fired {
