@@ -18,6 +18,7 @@ td, th {
 </style>
 >>
     webhook = function(_headers){
+      identifierRE = "[A-Za-z][A-Za-z0-9_]*"
       app:html_page("manage webhooks", styles,
 <<
 <h1>Manage Webhooks</h1>
@@ -42,8 +43,8 @@ td, th {
 </tr>
 >>}).join("")}
 <tr>
-<td><input name="event_domain"></td>
-<td><input name="event_type"></td>
+<td><input name="event_domain" required pattern="#{identifierRE}" title="identifier"></td>
+<td><input name="event_type" required pattern="#{identifierRE}" title="identifier"></td>
 <td colspan="2"><button type="submit">Add</button></td>
 </tr>
 </table>
