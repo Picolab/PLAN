@@ -66,41 +66,21 @@ td, th {
     pre {
       event_designation = event_domain + ":" + event_type
       channel_tags = ["webhook",event_designation]
+      already_assigned = ent:webhooks >< event_designation
     }
-    wrangler:createChannel(
-      channel_tags,
-      {"allow":[{"domain":event_domain,"name":event_type}],"deny":[]},
-      {"allow":[],"deny":[{"rid":"*","name":"*"}]}
-    ) setting(chan)
+    if not already_assigned then
+      wrangler:createChannel(
+        channel_tags,
+        {"allow":[{"domain":event_domain,"name":event_type}],"deny":[]},
+        {"allow":[],"deny":[{"rid":"*","name":"*"}]}
+      ) setting(chan)
     fired {
       ent:webhooks{event_designation} := {
         "domain":event_domain,
         "type":event_type,
         "uri":meta:host+"/sky/event/"+chan.get("id")+"/none/"+event_domain+"/"+event_type
       }
-      raise io_picolabs_plan_webhook event "channels_may_need_cleaning" attributes {
-        "tags": channel_tags.map(function(t){t.lc().replace(re#:#,"-")}),
-      }
     }
-  }
-  rule checkChannels {
-    select when io_picolabs_plan_webhook channels_may_need_cleaning
-    pre {
-      channels = wrangler:channels(event:attrs{"tags"})
-      stale_channels = channels.reverse().tail()
-      stale_ids = stale_channels.map(function(c){c.get("id")})
-    }
-    if stale_ids.length() then noop()
-    fired {
-      raise io_picolabs_plan_webhook event "stale_channels" attributes {
-        "channel_ids":stale_ids,
-      }
-    }
-  }
-  rule cleanUpChannels {
-    select when io_picolabs_plan_webhook stale_channels
-    foreach event:attrs{"channel_ids"} setting(chan_id)
-    wrangler:deleteChannel(chan_id)
   }
   rule removeWebhook {
     select when io_picolabs_plan_webhook webhook_not_needed
@@ -109,12 +89,10 @@ td, th {
       setting(event_domain,event_type)
     pre {
       event_designation = event_domain + ":" + event_type
-      channel_tags = ["webhook",event_designation]
-        .map(function(t){t.lc().replace(re#:#,"-")})
-      chan = wrangler:channels(channel_tags).head()
-      chan_id = chan.get("id")
+      webhook = ent:webhooks.get(event_designation)
+      eci = webhook.extract(re#/sky/event/([^/]*)/#).head()
     }
-    wrangler:deleteChannel(chan_id)
+    if eci then wrangler:deleteChannel(eci)
     fired {
       clear ent:webhooks{event_designation}
     }
