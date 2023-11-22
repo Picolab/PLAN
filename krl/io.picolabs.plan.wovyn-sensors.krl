@@ -77,8 +77,8 @@ ruleset io.picolabs.plan.wovyn-sensors {
     makeMT = function(ts){
       MST = time:add(ts,{"hours": -7});
       MDT = time:add(ts,{"hours": -6});
-      MDT > "2023-11-05T02" => MST |
-      MST > "2023-03-12T02" => MDT |
+      MDT > "2024-11-03T02" => MST |
+      MST > "2024-03-10T02" => MDT |
                                MST
     }
     ts_format = function(ts){
@@ -131,8 +131,8 @@ ruleset io.picolabs.plan.wovyn-sensors {
 daysInRecord()
   .map(function(d){
     midnight = function(d){ // choose MDT or MST
-      d > "2023-11-05" => "T07" |
-      d > "2023-03-12" => "T06" |
+      d > "2024-11-03" => "T07" |
+      d > "2024-03-10" => "T06" |
                           "T07"
     }
     <<  <option value="#{d}#{midnight(d)}">#{d}</option>
