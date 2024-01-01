@@ -1,5 +1,6 @@
 ruleset com.vcpnews.w {
   meta {
+    use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.plan.wovyn-sensors alias ws
     shares now
   }
