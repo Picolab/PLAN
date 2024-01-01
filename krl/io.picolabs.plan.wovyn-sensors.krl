@@ -5,7 +5,7 @@ ruleset io.picolabs.plan.wovyn-sensors {
     use module io.picolabs.wrangler alias wrangler
     shares wovyn_sensor, history, settings,
       export_tsv, export_csv, export_raw
-    provides daysInRecord, export_csv
+    provides daysInRecord, export_csv, summary
   }
   global {
     settings_link = function(){
@@ -197,6 +197,9 @@ daysInRecord()
     }
     export_raw = function(name){
       ent:record{name}.klog("raw")
+    }
+    summary = function(){
+      "summary here"
     }
   }
   rule prepareChannel {

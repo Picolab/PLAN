@@ -20,7 +20,7 @@ body {
   <body>
 <h1>Wovyn sensors now</h1>
 <h2>#{time:now().split("T").head()}</h2>
-  </body>
+#{ws:summary()}  </body>
 </html>
 >>
     }
