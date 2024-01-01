@@ -19,6 +19,7 @@ body {
   </head>
   <body>
 <h1>Wovyn sensors now</h1>
+<h2>#{time:now().split("T").head()}</h2>
   </body>
 </html>
 >>
@@ -27,20 +28,11 @@ body {
   }
   rule initialize {
     select when wrangler ruleset_installed where event:attr("rids") >< meta:rid
-    every {
+    if wrangler:channels(tags).length() == 0 then
       wrangler:createChannel(
         tags,
         {"allow":[{"domain":"com_vcpnews_w","name":"*"}],"deny":[]},
         {"allow":[{"rid":meta:rid,"name":"*"}],"deny":[]}
       ) setting(channel)
-    }
-    fired {
-      raise com_vcpnews_w event "channel_created"
-    }
-  }
-  rule keepChannelsClean {
-    select when com_vcpnews_w channel_created
-    foreach wrangler:channels(tags).reverse().tail() setting(chan)
-    wrangler:deleteChannel(chan.get("id"))
   }
 }
