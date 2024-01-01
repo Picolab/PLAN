@@ -199,7 +199,10 @@ daysInRecord()
       ent:record{name}.klog("raw")
     }
     summary = function(){
-      "summary here"
+      <<<table>
+<tr><th>Location</th><th>Time</th><th>Temperature</th></tr>
+</table>
+>>
     }
   }
   rule prepareChannel {
