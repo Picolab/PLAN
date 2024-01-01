@@ -9,7 +9,7 @@ ruleset com.vcpnews.w {
       <<<!DOCTYPE HTML>
 <html>
   <head>
-    <title>Wovyn sensors</title>
+    <title>Wovyn sensors now</title>
     <meta charset="UTF-8">
 <style type="text/css">
 body {
