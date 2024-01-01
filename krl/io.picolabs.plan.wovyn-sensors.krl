@@ -199,8 +199,21 @@ daysInRecord()
       ent:record{name}.klog("raw")
     }
     summary = function(){
+      one_sensor = function(k){
+        v = ent:record.get(k)
+        vlen = v.length()
+        t1 = v[vlen-2]
+        t2 = v[vlen-1]
+        <<<tr>
+<td title="#{k}">#{ent:mapping{k}}</td>
+<td title="#{t1}">#{t1.makeMT().ts_format()}</td>
+<td>#{t2}°F</td>
+</tr>
+>>
+      }
       <<<table>
 <tr><th>Location</th><th>Time</th><th>Temperature</th></tr>
+#{ent:mapping.keys().map(one_sensor).join("")}
 </table>
 >>
     }
