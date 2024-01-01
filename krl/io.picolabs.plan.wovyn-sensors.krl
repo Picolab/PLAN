@@ -202,12 +202,13 @@ daysInRecord()
       one_sensor = function(k){
         v = ent:record.get(k)
         vlen = v.length()
-        t1 = v[vlen-2]
-        t2 = v[vlen-1]
+        the_timestamp = v[vlen-2]
+        the_time_only = the_timestamp.makeMT().ts_format().replace(re#.* #,"")
+        the_temp = v[vlen-1]
         <<<tr>
 <td title="#{k}">#{ent:mapping{k}}</td>
-<td title="#{t1}">#{t1.makeMT().ts_format()}</td>
-<td>#{t2}°F</td>
+<td title="#{the_timestamp}">#{the_time_only}</td>
+<td>#{the_temp}°F</td>
 </tr>
 >>
       }
