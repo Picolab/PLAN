@@ -12,9 +12,10 @@ ruleset com.vcpnews.w {
     <title>Wovyn sensors now</title>
     <meta charset="UTF-8">
 <style type="text/css">
-body {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-}
+body { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
+th { text-align: left; }
+th:first-child { min-width: 100px; }
+th:nth-child(2) { min-width: 80px; }
 </style>
   </head>
   <body>
