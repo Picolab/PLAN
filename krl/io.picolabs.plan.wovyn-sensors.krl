@@ -254,24 +254,22 @@ daysInRecord()
       clear ent:mapping{name}
     }
   }
-  rule addSensorMapping {
+  rule insertSensorMapping {
     select when io_picolabs_plan_wovyn_sensors sensor_needed
       name re#(Wovyn_[A-F0-9]{6})#
       location re#(.+)#
       setting(name,location)
     pre {
       new_location = {}.put(name,location)
-.klog("new_location")
       new_mapping = ent:mapping
         .keys()
         .reduce(function(a,k){
             a.put(k,ent:mapping.get(k))
           },new_location)
-.klog("new_mapping")
     }
     send_directive("_redirect",{"url":settings_link()})
     fired {
-      ent:mapping{name} := location
+      ent:mapping := new_mapping
     }
   }
   rule acceptHeartbeat {
