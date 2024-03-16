@@ -30,6 +30,12 @@ ruleset io.picolabs.plan.wovyn-sensors {
 <th style="text-align:left">Location</th>
 <th>Remove</th>
 </tr>
+<tr>
+<td></td>
+<td><input name="name"></td>
+<td><input name="location"</td>
+<td><button type="submit">Add</button></td>
+</tr>
 #{
   ent:mapping
     .keys()
@@ -47,13 +53,7 @@ ruleset io.picolabs.plan.wovyn-sensors {
     )
     .values()
     .join("")
-}<tr>
-<td></td>
-<td><input name="name"></td>
-<td><input name="location"</td>
-<td><button type="submit">Add</button></td>
-</tr>
-</table>
+}</table>
 </form>
 >>, _headers)
     }
