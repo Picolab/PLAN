@@ -34,7 +34,7 @@ ruleset io.picolabs.plan.wovyn-sensors {
 <td></td>
 <td><input name="name"></td>
 <td><input name="location"</td>
-<td><button type="submit">Add</button></td>
+<td><button type="submit">Insert</button></td>
 </tr>
 #{
   ent:mapping
@@ -259,6 +259,16 @@ daysInRecord()
       name re#(Wovyn_[A-F0-9]{6})#
       location re#(.+)#
       setting(name,location)
+    pre {
+      new_location = {}.put(name,location)
+.klog("new_location")
+      new_mapping = ent:mapping
+        .keys()
+        .reduce(function(a,k){
+            a.put(k,ent:mapping.get(k))
+          },new_location)
+.klog("new_mapping")
+    }
     send_directive("_redirect",{"url":settings_link()})
     fired {
       ent:mapping{name} := location
