@@ -20,10 +20,17 @@ th:nth-child(2) { min-width: 80px; }
   </head>
   <body>
 <h1>Wovyn sensors now</h1>
-<h2>#{time:now().split("T").head()}</h2>
+<h2>#{time:now().makeMT().split("T").head()}</h2>
 #{ws:summary()}  </body>
 </html>
 >>
+    }
+    makeMT = function(ts){
+      MST = time:add(ts,{"hours": -7});
+      MDT = time:add(ts,{"hours": -6});
+      MDT > "2024-11-03T02" => MST |
+      MST > "2024-03-10T02" => MDT |
+                               MST
     }
     tags = ["wovyn-sensors","summary"]
   }
