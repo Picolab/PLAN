@@ -283,6 +283,7 @@ daysInRecord()
       time = time:now()
       record = ent:record{device}.defaultsTo([]).append([time,tempF])
     }
+    if local_name then noop()
     fired {
       ent:record{device} := record
       raise io_picolabs_plan_wovyn_sensors event "temp_recorded"
