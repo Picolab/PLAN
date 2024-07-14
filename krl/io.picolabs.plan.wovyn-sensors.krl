@@ -320,4 +320,15 @@ daysInRecord()
     }
     if referrer then send_directive("_redirect",{"url":referrer})
   }
+  rule takeDeviceOutOfService {
+    select when io_picolabs_plan_wovyn_sensors out_of_service
+    pre {
+      device = event:attr("name")
+      used = ent:mapping >< device
+    }
+    if not used && ent:record >< device then noop()
+    fired {
+      clear ent:record{device}
+    }
+  }
 }
