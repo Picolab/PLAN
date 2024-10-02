@@ -131,6 +131,10 @@ ruleset io.picolabs.plan.ruleset {
 <td title="#{flushed_time}">#{flushed_time.makeMT().ts_format()}</td>
 </tr>
 <tr>
+<td>Config</td>
+<td>#{rs{"config"}.encode()}</td>
+</tr>
+<tr>
 <td>Source code</td>
 <td><a href="#{url}" target="_blank">#{url}</a></td>
 </tr>
