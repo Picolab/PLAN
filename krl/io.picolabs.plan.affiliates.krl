@@ -154,11 +154,12 @@ When you see the page, you can bookmark it for future reference.
       hasRID = childRIDs >< appsRID
       url = hasRID => wrangler:picoQuery(
         child_eci,appsRID,"apps_login_url")+"?request_method=GET" | null
-      is_here = "Your personal agent is here: " + url
+      subject = "verify your email address"
+      message = "Click here to verify your email address: " + url
       sent_url = <<#{meta:host}/c/#{meta:eci}/query/#{meta:rid}/sentPage.html>>
     }
     if url then every {
-      email:send_text(email_address,"your personal agent",is_here) setting(res)
+      email:send_text(email_address,subject,message) setting(res)
       send_directive("_redirect",{"url":sent_url})
     }
     fired {
