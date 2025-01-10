@@ -131,8 +131,8 @@ ruleset io.picolabs.plan.wovyn-sensors {
 daysInRecord()
   .map(function(d){
     midnight = function(d){ // choose MDT or MST
-      d > "2024-11-03" => "T07" |
-      d > "2024-03-10" => "T06" |
+      d > "2025-11-02" => "T07" |
+      d > "2025-03-09" => "T06" |
                           "T07"
     }
     <<  <option value="#{d}#{midnight(d)}">#{d}</option>
