@@ -77,8 +77,8 @@ ruleset io.picolabs.plan.wovyn-sensors {
     makeMT = function(ts){
       MST = time:add(ts,{"hours": -7});
       MDT = time:add(ts,{"hours": -6});
-      MDT > "2024-11-03T02" => MST |
-      MST > "2024-03-10T02" => MDT |
+      MDT > "2025-11-02T02" => MST |
+      MST > "2025-03-09T02" => MDT |
                                MST
     }
     ts_format = function(ts){
