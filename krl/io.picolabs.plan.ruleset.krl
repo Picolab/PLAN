@@ -55,6 +55,8 @@ ruleset io.picolabs.plan.ruleset {
       MST > "2025-03-09T02" => MDT |
       MDT > "2024-11-03T02" => MST |
       MST > "2024-03-10T02" => MDT |
+      MDT > "2023-11-05T02" => MST |
+      MST > "2023-03-12T02" => MDT |
                                MST
     }
     ts_format = function(ts){
