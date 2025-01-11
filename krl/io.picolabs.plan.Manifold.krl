@@ -44,6 +44,7 @@ ruleset io.picolabs.plan.Manifold {
     setup = function(_headers){
       h = ent:host => << value="#{ent:host}">> | ""
       p = ent:port => << value="#{ent:port}">> | ""
+      k = ent:key => << value="#{ent:key}">> | ""
       app:html_page("Manifold setup", "",
 <<
 <h1>Manifold setup</h1>
@@ -51,7 +52,7 @@ ruleset io.picolabs.plan.Manifold {
 <h2>Host and port</h2>
 <input name="host" required#{h}>:<input name="port" type="number"#{p}>
 <h2>Key</h2>
-<input name="key" size="30" required>
+<input name="key" size="30" required#{k}>
 <h2>Submit</h2>
 <button type="submit">Submit</button>
 </form>
