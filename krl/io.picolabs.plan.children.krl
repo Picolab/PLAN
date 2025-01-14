@@ -24,7 +24,7 @@ ruleset io.picolabs.plan.children {
     <td class="r" style="width:#{box{"x"}}px;height:#{box{"y"}}px"></td>
     <td></td>
   </tr>
-  <tr title="#{box.encode()}">
+  <tr title="#{box.encode().encode()}">
     <td></td>
     <td class="b r" style="#{pico_style}" contenteditable>#{box{"name"}}</td>
   </tr>
