@@ -16,7 +16,8 @@ ruleset io.picolabs.plan.children {
       pico_style = [
         <<width:#{box{"width"}}px>>,
         <<height:#{box{"height"}}px>>,
-        <<background-color:#{box{"backgroundColor"}}>>
+        <<background-color:#{box{"backgroundColor"}}>>,
+        "border-radius: .25rem"
       ].join(";")
       <<<table style="position:absolute;top:0px;left:0px">
   <tr>
