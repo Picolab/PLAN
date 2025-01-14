@@ -3,7 +3,7 @@ ruleset io.picolabs.plan.children {
     name "Direct Children"
     use module io.picolabs.plan.apps alias app
     use module io.picolabs.wrangler alias wrangler
-    shares children
+    shares children, tech
   }
   global {
     uiRID = "io.picolabs.pico-engine-ui"
@@ -35,16 +35,23 @@ a#docs { float:right; text-decoration:none; margin:0.5em; }
     }
     children = function(_headers){
       direct_children = wrangler:children()
+      tech_url = app:query_url(meta:rid,"tech")
       app:html_page("manage Direct Children", styles,
 <<
-<a id="tech" href="#" title="Technical Details">⚙️</a>
+<a id="tech" href="#{tech_url}" title="Technical Details">⚙️</a>
 <a id="docs" href="#" title="How to move/resize">ℹ️</a>
 <h1>Manage Direct Children</h1>
 #{direct_children.map(function(c){
   the_box = wrangler:picoQuery(c{"eci"},uiRID,"just_box")
   one_pico(the_box)
 }).join("")}
-<!--
+>>, _headers)
+    }
+    tech = function(_headers){
+      direct_children = wrangler:children()
+      app:html_page("manage Direct Children", "",
+<<
+<h1>Manage Direct Children</h1>
 <h2>Technical</h2>
 <dl>
 #{direct_children.map(function(c){
@@ -52,6 +59,7 @@ a#docs { float:right; text-decoration:none; margin:0.5em; }
   <<<dt>#{c{"name"}}</dt><dd><pre>#{the_box.encode()}</pre></dd>
 >>
 }).join("")}</dl>
+<!--
 TODO add button to create an additional child pico
 -->
 >>, _headers)
