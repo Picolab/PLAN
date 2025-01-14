@@ -9,7 +9,7 @@ ruleset io.picolabs.plan.children {
     uiRID = "io.picolabs.pico-engine-ui"
     get_box = function(eci){
       uiECI = wrangler:picoQuery(eci,uiRID,"uiECI")
-      uiECI => wrangler:picoQuery(uiECI,uiRID,"box") | null
+      uiECI => wrangler:picoQuery(uiECI,uiRID,"just_box") | null
     }
     children = function(_headers){
       direct_children = wrangler:children()
