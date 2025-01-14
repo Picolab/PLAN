@@ -9,8 +9,8 @@ ruleset io.picolabs.plan.introspect {
   global {
     rsRID = "io.picolabs.plan.ruleset"
     introspect = function(_headers){
-      netid = wrangler:name()
-      repo_name = netid + "/bazaar"
+      plan_id = wrangler:name()
+      repo_name = plan_id + "/bazaar"
       subs_count = subs:established()
         .length()
       pECI = wrangler:parent_eci()
@@ -28,7 +28,7 @@ ruleset io.picolabs.plan.introspect {
       <<
 <h1>Manage introspections</h1>
 <h2>Overview</h2>
-<p>Your pico is named "#{netid}"#{
+<p>Your pico is named "#{plan_id}"#{
   pName => << and its parent pico is named "#{pName}".>> | "."}</p>
 <p>It has #{wrangler:installedRIDs().length()} #{rs_link},
 of which #{apps.length()} are apps.

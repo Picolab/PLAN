@@ -171,8 +171,8 @@ source_hash == meta_hash => <<
     }
     repo_rid = "com.vcpnews.repo"
     repo_name = function(){
-      netid = wrangler:name()
-      netid+"/bazaar"
+      plan_id = wrangler:name()
+      plan_id+"/bazaar"
     }
     repo_pico = function(){
       the_name = repo_name()
