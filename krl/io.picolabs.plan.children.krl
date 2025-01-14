@@ -22,7 +22,7 @@ ruleset io.picolabs.plan.children {
 #{direct_children.map(function(c){
   <<<dt>${c{"name"}}</dt><dd><pre>get_box(c{"eci"}).encode()</pre></dd>
 >>
-})}</dl>
+}).join("")}</dl>
 >>, _headers)
     }
   }
