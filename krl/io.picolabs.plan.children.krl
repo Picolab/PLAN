@@ -13,7 +13,6 @@ ruleset io.picolabs.plan.children {
 <<
 <h1>Manage Direct Children</h1>
 <h2>Technical</h2>
-<pre>#{direct_children.encode()}</pre>
 <dl>
 #{direct_children.map(function(c){
   the_box = wrangler:picoQuery(c{"eci"},uiRID,"just_box")
