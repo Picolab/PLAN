@@ -35,7 +35,7 @@ a#docs { float:right; text-decoration:none; margin:0.5em; }
     }
     children = function(_headers){
       direct_children = wrangler:children()
-      tech_url = app:query_url(meta:rid,"tech")
+      tech_url = app:query_url(meta:rid,"tech.html")
       app:html_page("manage Direct Children", styles,
 <<
 <a id="tech" href="#{tech_url}" title="Technical Details">⚙️</a>
