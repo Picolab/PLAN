@@ -18,11 +18,11 @@ ruleset io.picolabs.plan.children {
 <h1>Manage Direct Children</h1>
 <h2>Technical</h2>
 <pre>#{direct_children.encode()}</pre>
-<ul>
+<dl>
 #{direct_children.map(function(c){
-  <<<li><pre>get_box(c{"eci"}).encode()</pre></li>
+  <<<dt>${c{"name"}}</dt><dd><pre>get_box(c{"eci"}).encode()</pre></dd>
 >>
-}).values()}</ul>
+})}</dl>
 >>, _headers)
     }
   }
