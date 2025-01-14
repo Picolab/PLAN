@@ -3,7 +3,7 @@ ruleset io.picolabs.plan.ruleset {
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.plan.introspect alias intro
     use module io.picolabs.plan.apps alias app
-    shares rulesets, ruleset, repo_krl, repo_uiECI, krl, codeEditor
+    shares rulesets, ruleset, repo_krl, krl, codeEditor
   }
   global {
     pf = re#^file:///.*/lib/node_modules/#
@@ -195,11 +195,6 @@ source_hash == meta_hash => <<
         "krl",
         {"rid":rid}
       )
-    }
-    repo_uiECI = function(){
-      repo = repo_pico()
-      repo.isnull() => "no repo" |
-      wrangler:picoQuery(repo{"eci"},"io.picolabs.pico-engine-ui","uiECI")
     }
     krl = function(rid){
       rs = ctx:rulesets.filter(function(r){r{"rid"}==rid}).head()
