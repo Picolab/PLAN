@@ -13,6 +13,11 @@ ruleset io.picolabs.plan.children {
 </style>
 >>
     one_pico = function(box){
+      pico_style = [
+        <<width:#{box{"width"}}px>>,
+        <<height:#{box{"height"}}px>>,
+        <<background-color:#{box{"backgroundColor"}}>>
+      ].join(";")
       <<<table style="position:absolute;top:0px;left:0px">
   <tr>
     <td class="r" style="width:#{box{"x"}}px;height:#{box{"y"}}px"></td>
@@ -20,9 +25,7 @@ ruleset io.picolabs.plan.children {
   </tr>
   <tr>
     <td></td>
-    <td class="b r"
-        style="width:#{box{"width"}}px;height:#{box{"height"}}px"
-        contenteditable>#{box{"name"}}</td>
+    <td class="b r" style="#{pico_style}" contenteditable>#{box{"name"}}</td>
   </tr>
 </table>
 >>
