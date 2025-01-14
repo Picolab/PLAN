@@ -7,11 +7,35 @@ ruleset io.picolabs.plan.children {
   }
   global {
     uiRID = "io.picolabs.pico-engine-ui"
+    styles = <<
+.r { resize:both;overflow:auto; }
+.b { border:1px solid black; }
+>>
+    one_pico = function(box){
+      <<<table style="position:absolute;top:0px;left:0px">
+  <tr>
+    <td class="r" style="width:#{box{"x"}}px;height:#{box{"y"}}px"></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td class="b r"
+        style="width:#{box{"width"}}px;height:#{box{"height"}}px"
+        contenteditable>#{box{"name"}}</td>
+  </tr>
+</table>
+>>
+    }
     children = function(_headers){
       direct_children = wrangler:children()
-      app:html_page("manage Direct Children", "",
+      app:html_page("manage Direct Children", styles,
 <<
 <h1>Manage Direct Children</h1>
+#{direct_children.map(function(c){
+  the_box = wrangler:picoQuery(c{"eci"},uiRID,"just_box")
+  one_pico(the_box)
+}).join("")}
+<!--
 <h2>Technical</h2>
 <dl>
 #{direct_children.map(function(c){
@@ -19,6 +43,7 @@ ruleset io.picolabs.plan.children {
   <<<dt>#{c{"name"}}</dt><dd><pre>#{the_box.encode()}</pre></dd>
 >>
 }).join("")}</dl>
+-->
 >>, _headers)
     }
   }
