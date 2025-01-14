@@ -344,9 +344,9 @@ source_hash == meta_hash => <<
   rule reactToChildCreation {
     select when wrangler:new_child_created
     pre {
-      child_eci = event:attr("eci")
+      child_eci = event:attrs{"eci"}
     }
-    if child_eci then
+    if child_eci && event:attrs{"name"} == repo_name() then
       event:send({"eci":child_eci,
         "domain":"wrangler","type":"install_ruleset_request",
         "attrs":{"absoluteURL": meta:rulesetURI,"rid":repo_rid}
