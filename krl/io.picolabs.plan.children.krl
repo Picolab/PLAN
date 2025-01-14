@@ -7,10 +7,6 @@ ruleset io.picolabs.plan.children {
   }
   global {
     uiRID = "io.picolabs.pico-engine-ui"
-    get_box = function(eci){
-      uiECI = wrangler:picoQuery(eci,uiRID,"uiECI")
-      uiECI => wrangler:picoQuery(uiECI,uiRID,"just_box") | null
-    }
     children = function(_headers){
       direct_children = wrangler:children()
       app:html_page("manage Direct Children", "",
@@ -20,7 +16,8 @@ ruleset io.picolabs.plan.children {
 <pre>#{direct_children.encode()}</pre>
 <dl>
 #{direct_children.map(function(c){
-  <<<dt>#{c{"name"}}</dt><dd><pre>#{get_box(c{"eci"}).encode()}</pre></dd>
+  the_box = wrangler:picoQuery(c{"eci"},uiRID,"just_box")
+  <<<dt>#{c{"name"}}</dt><dd><pre>#{the_box.encode()}</pre></dd>
 >>
 }).join("")}</dl>
 >>, _headers)
