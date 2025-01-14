@@ -7,9 +7,10 @@ ruleset io.picolabs.plan.children {
   }
   global {
     uiRID = "io.picolabs.pico-engine-ui"
-    styles = <<
+    styles = <<<style>
 .r { resize:both;overflow:auto; }
 .b { border:1px solid black; }
+</style>
 >>
     one_pico = function(box){
       <<<table style="position:absolute;top:0px;left:0px">
