@@ -10,6 +10,8 @@ ruleset io.picolabs.plan.children {
     styles = <<<style>
 .r { resize:both;overflow:auto; }
 .b { border:1px solid black; }
+a#tech { float:right; text-decoration:none; margin:0.5em; }
+a#docs { float:right; text-decoration:none; margin:0.5em; }
 </style>
 >>
     one_pico = function(box){
@@ -35,6 +37,8 @@ ruleset io.picolabs.plan.children {
       direct_children = wrangler:children()
       app:html_page("manage Direct Children", styles,
 <<
+<a id="tech" href="#" title="Technical Details">⚙️</a>
+<a id="docs" href="#" title="How to move/resize">ℹ️</a>
 <h1>Manage Direct Children</h1>
 #{direct_children.map(function(c){
   the_box = wrangler:picoQuery(c{"eci"},uiRID,"just_box")
