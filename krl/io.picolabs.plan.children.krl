@@ -26,7 +26,7 @@ a#docs { float:right; text-decoration:none; margin:0.5em; }
     <td class="r" style="width:#{box{"x"}}px;height:#{box{"y"}}px"></td>
     <td></td>
   </tr>
-  <tr title="#{box.encode().replace(re#"#g,"&quot;")}">
+  <tr>
     <td></td>
     <td class="b r" style="#{pico_style}" contenteditable>#{box{"name"}}</td>
   </tr>
