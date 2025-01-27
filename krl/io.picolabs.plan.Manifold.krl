@@ -48,7 +48,7 @@ ruleset io.picolabs.plan.Manifold {
 >>, _headers)
     }
     setup = function(_headers){
-      tls = ent:TLS => " checked" | ""
+      tls = ent:TLS.isnull() || ent:TLS => " checked" | ""
       h = ent:host => << value="#{ent:host}">> | ""
       p = ent:port => << value="#{ent:port}">> | ""
       k = ent:key => << value="#{ent:key}">> | ""
@@ -124,7 +124,7 @@ document.write(JSON.stringify(#{the_thing.encode()},null,2))
       key re#(.+)#
       setting(host,port,key)
     fired {
-      ent:TLS := true
+      ent:TLS := event:attrs{"tls"} == "s"
       ent:host := host
       ent:port := port
       ent:key := key
