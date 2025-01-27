@@ -7,17 +7,21 @@ ruleset io.picolabs.plan.Manifold {
   }
   global {
     things = function(_headers){
-      ent:host && ent:key => things_list(_headers) | setup(_headers)
+      need_setup = ent:host.isnull() || ent:key.isnull() || ent:TLS.isnull()
+      need_setup => setup(_headers) | things_list(_headers)
+    }
+    Mprefix = function(s,h,p){
+      <<http#{s => "s" | ""}://#{h}#{p => ":" + p | ""}>>
     }
     Mq = function(host,port){
       h = host || ent:host
       p = port || ent:port
-      "https://" + h + (p => ":" + p | "") + "/sky/cloud/"
+      Mprefix(ent:TLS,h,p) + "/sky/cloud/"
     }
     Me = function(eci,eid="none"){
       h = ent:host
       p = ent:port
-      "https://" + h + (p => ":" + p | "") + "/sky/event/" + eci + "/" + eid + "/"
+      Mprefix(ent:TLS,h,p) + "/sky/event/" + eci + "/" + eid + "/"
     }
     things_list = function(_headers){
       base_url = app:query_url(meta:rid,"thing.html")
@@ -123,6 +127,7 @@ document.write(JSON.stringify(#{the_thing.encode()},null,2))
       the_list = http:get(url).get("content").decode()
     }
     fired {
+      ent:TLS := true
       ent:host := host
       ent:port := port
       ent:key := key
