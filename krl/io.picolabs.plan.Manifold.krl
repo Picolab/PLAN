@@ -21,12 +21,14 @@ ruleset io.picolabs.plan.Manifold {
     }
     things_list = function(_headers){
       base_url = app:query_url(meta:rid,"thing.html")
+      sbs = [
+        "float:right",
+        "text-decoration:none",
+        "margin:0.5em",
+      ]
       app:html_page("Manifold things", "",
 <<
-<h1
-  style="float:right;cursor:pointer"
-  title="Setup"
-  onclick="location='setup.html'">⚙</h1>
+<a style="#{sbs.join(";")}" href="setup.html" title="Setup">⚙️</a>
 <h1>Manifold things</h1>
 <ul>
 #{
