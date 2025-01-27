@@ -121,16 +121,21 @@ document.write(JSON.stringify(#{the_thing.encode()},null,2))
       port re#(.*)#
       key re#(.+)#
       setting(host,port,key)
-    pre {
-      url = Mq(host,port) + key
-          + "/io.picolabs.manifold_pico/getThings"
-      the_list = http:get(url).get("content").decode()
-    }
     fired {
       ent:TLS := true
       ent:host := host
       ent:port := port
       ent:key := key
+    }
+  }
+  rule getThings {
+    select when io_picolabs_plan_Manifold setup_provided
+    pre {
+      url = Mq(ent:host,ent:port) + ent:key
+          + "/io.picolabs.manifold_pico/getThings"
+      the_list = http:get(url).get("content").decode()
+    }
+    fired {
       ent:things_list := the_list
     }
   }
