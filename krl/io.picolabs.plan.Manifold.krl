@@ -48,6 +48,7 @@ ruleset io.picolabs.plan.Manifold {
 >>, _headers)
     }
     setup = function(_headers){
+      tls = ent:TLS => " checked" | ""
       h = ent:host => << value="#{ent:host}">> | ""
       p = ent:port => << value="#{ent:port}">> | ""
       k = ent:key => << value="#{ent:key}">> | ""
@@ -56,6 +57,7 @@ ruleset io.picolabs.plan.Manifold {
 <h1>Manifold setup</h1>
 <form action="#{app:event_url(meta:rid,"setup_provided")}">
 <h2>Host and port</h2>
+<input name="tls" value="s"#{tls}> TLS
 <input name="host" required#{h}>:<input name="port" type="number"#{p}>
 <h2>Key</h2>
 <input name="key" size="30" required#{k}>
