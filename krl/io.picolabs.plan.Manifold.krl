@@ -52,7 +52,7 @@ ruleset io.picolabs.plan.Manifold {
       h = ent:host => << value="#{ent:host}">> | ""
       p = ent:port => << value="#{ent:port}">> | ""
       k = ent:key => << value="#{ent:key}">> | ""
-      app:html_page("Manifold setup", "",
+      app:html_page("Manifold setup", setup_styles,
 <<
 <h1>Manifold setup</h1>
 <form action="#{app:event_url(meta:rid,"setup_provided")}">
@@ -60,12 +60,21 @@ ruleset io.picolabs.plan.Manifold {
 <input name="tls" type="checkbox" value="s"#{tls}> TLS<br>
 <input name="host" required#{h}>:<input name="port" type="number"#{p}>
 <h2>Key</h2>
-<input name="key" size="30" required#{k}>
+<div id="eyes"><span>👀</span><input name="key" size="30" required#{k}></div>
 <h2>Submit</h2>
 <button type="submit">Submit</button>
 </form>
 >>, _headers)
     }
+    setup_styles = <<<style>
+#eyes { position:relative; width:fit-content; }
+#eyes input { width:100%; -webkit-text-security:disc; }
+#eyes span { display:inline-block; position:absolute; top:0; right:0.5em;
+  transform:scale(-1,1); cursor:help; }
+#eyes span:hover { transform:scale(1,1); }
+#eyes span:hover + input { -webkit-text-security:none; }
+</style>
+>>
     thing = function(eci,_headers){
       apps = http:get(Me(eci)+"manifold/apps")
         .get("content")
