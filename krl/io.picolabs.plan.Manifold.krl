@@ -58,7 +58,7 @@ ruleset io.picolabs.plan.Manifold {
 <form action="#{app:event_url(meta:rid,"setup_provided")}">
 <h2>Host and port</h2>
 <input name="tls" type="checkbox" value="s"#{tls}> TLS<br>
-<input name="host" required#{h}>:<input name="port" type="number"#{p}>
+<input name="host" required#{h}>:<input id="port" name="port" type="number"#{p}>
 <h2>Key</h2>
 <div id="eyes"><span>👀</span><input name="key" size="30" required#{k}></div>
 <h2>Submit</h2>
@@ -67,9 +67,10 @@ ruleset io.picolabs.plan.Manifold {
 >>, _headers)
     }
     setup_styles = <<<style>
+#port { width:4em; }
 #eyes { position:relative; width:fit-content; }
 #eyes input { width:100%; -webkit-text-security:disc; }
-#eyes span { display:inline-block; position:absolute; top:0; right:0.5em;
+#eyes span { display:inline-block; position:absolute; top:0; right:0;
   transform:scale(-1,1); cursor:help; }
 #eyes span:hover { transform:scale(1,1); }
 #eyes span:hover + input { -webkit-text-security:none; }
