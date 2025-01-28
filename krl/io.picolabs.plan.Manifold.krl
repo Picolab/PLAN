@@ -77,7 +77,7 @@ ruleset io.picolabs.plan.Manifold {
       the_thing = ent:things_list.values()
         .filter(function(v){v.get("Tx") == eci}).head()
       the_thing_name = the_thing.get("name")
-      the_thing_picoId = the_thing.get("picoId") || the_thing.get("picoID")
+      the_thing_picoId = the_thing.get("picoID")
       app_list = app:app_list()
       app:html_page(the_thing_name,"",
 <<
