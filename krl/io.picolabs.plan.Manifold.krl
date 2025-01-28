@@ -90,7 +90,9 @@ ruleset io.picolabs.plan.Manifold {
     known = k.match(re#safeandmine|journal#)
     planRID = v.get("rid").replace("io.picolabs.","io.picolabs.plan.M-")
     have_app = app_list >< planRID
-    plan_title = have_app => "" | << title="#{"need app " + planRID}">>
+    plan_title = have_app   => "" |
+                 deprecated => "" |
+                               << title="#{"need app " + planRID}">>
     plan_link = have_app => app:query_url(planRID,k+".html?eci="+eci) | "#"
     app_link = known && have_app => <<<a href="#{plan_link}">#{k}</a\>>> | k
     styles = [
