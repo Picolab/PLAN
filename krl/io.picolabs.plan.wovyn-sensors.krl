@@ -180,10 +180,12 @@ daysInRecord()
     LF = chr(10)
     export = function(delim){
       one_device = function(list,delims){
+        vlen = list.length()
+        was_cutoff = vlen == 0 || list[vlen-2] < ent:cutoff
         tts = function(a,tt,i){
           a+(i%2==0 => tt.makeMT().ts_format() + delims | tt + LF)
         }
-        list.length() => list.reduce(tts,"") | ""
+        was_cutoff => "" | list.reduce(tts,"")
       }
       hdr = ["Timestamp"].append(ent:mapping.values().reverse()).join(delim)
       lines = ent:mapping.keys().reverse().map(function(k,i){
