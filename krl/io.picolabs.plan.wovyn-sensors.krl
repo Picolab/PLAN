@@ -62,6 +62,8 @@ ruleset io.picolabs.plan.wovyn-sensors {
         i%2==0
         &&
         v.encode().decode().match(re#T07#) // one a.m. MDT / midnight MST
+        &&
+        ent:cutoff < v.encode().decode()
       }
       flatten = function(a,v){a.append(v)}
       justDate = function(t){t.split("T").head()}
