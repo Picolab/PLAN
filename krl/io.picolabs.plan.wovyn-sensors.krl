@@ -290,18 +290,6 @@ daysInRecord()
         attributes {"name":local_name,"time":time.makeMT(),"temp":tempF}
     }
   }
-  rule pruneList {
-    select when io_picolabs_plan_wovyn_sensors prune_needed
-      where ent:record.keys() >< event:attr("name")
-    pre {
-      device = event:attr("name")
-      cutoff = event:attr("cutoff")
-      new_list = ent:record{device}.pruned_list(cutoff)
-    }
-    fired {
-      ent:record{device} := new_list
-    }
-  }
   rule pruneAllLists {
     select when io_picolabs_plan_wovyn_sensors prune_all_needed
       cutoff re#^(202\d-\d\d-\d\dT0\d)# setting(cutoff)
