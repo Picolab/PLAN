@@ -203,12 +203,15 @@ daysInRecord()
         v = ent:record.get(k)
         vlen = v.length()
         the_timestamp = v[vlen-2]
-        the_time_only = the_timestamp.makeMT().ts_format().replace(re#.* #,"")
-        the_temp = v[vlen-1]
+        was_cutoff = the_timestamp < ent:cutoff
+        the_time_only = was_cutoff => "&nbsp;"
+                      | the_timestamp.makeMT().ts_format().replace(re#.* #,"")
+        the_temp = was_cutoff => "&nbsp;"
+                 | <<#{v[vlen-1]}°F>>
         <<<tr>
 <td title="#{k}">#{ent:mapping{k}}</td>
 <td title="#{the_timestamp}">#{the_time_only}</td>
-<td>#{the_temp}°F</td>
+<td>#{the_temp}</td>
 </tr>
 >>
       }
@@ -299,6 +302,7 @@ daysInRecord()
     }
     fired {
       ent:record{device} := new_list
+      ent:cutoff := cutoff
     }
   }
   rule redirectBack {
