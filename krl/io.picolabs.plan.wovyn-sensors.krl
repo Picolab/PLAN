@@ -99,17 +99,19 @@ ruleset io.picolabs.plan.wovyn-sensors {
       one_sensor = function(k){
         v = ent:record.get(k)
         vlen = v.length()
+        was_cutoff = vlen == 0 || v[vlen-2] < ent:cutoff
         <<<h2 title="#{k}">#{ent:mapping{k}}</h2>
 <table>
 <tr>
 <th>Timestamp</th>
 <th>Temperature</th>
 </tr>
-#{v.slice(vlen-2,vlen-1).reduce(temps,"").join("")}
+#{was_cutoff => "" | v.slice(vlen-2,vlen-1).reduce(temps,"").join("")}
 </table>
+>> + (was_cutoff => "" | <<
 <a href="history.html?name=#{k}">history</a>
 (#{vlen/2-1} more)
->>
+>>)
       }
       gear_styles = [
         "float:right",
